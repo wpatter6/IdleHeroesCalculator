@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "include": [ "./Scripts/*" ],
+  "exclude": [
+    "webpack.config.js",
+    "node_modules",
+    "wwwroot"
+  ]
+}

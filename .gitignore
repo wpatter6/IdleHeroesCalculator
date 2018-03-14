@@ -1,0 +1,13 @@
+*.config
+*.db
+*.lock
+*.csv
+*.log
+**/bin/**
+**/obj/**
+**/.vs/**
+**/dist/**
+**/node_modules/**
+*.pubxml
+*.user
+**/Releases/**
