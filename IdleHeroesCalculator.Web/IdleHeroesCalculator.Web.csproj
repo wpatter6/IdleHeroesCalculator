@@ -21,10 +21,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\lib\axios-0.18.0.js" />
-    <None Include="wwwroot\lib\imagesloaded-4.1.4.js" />
-    <None Include="wwwroot\lib\infinite-scroll-3.0.3.js" />
-    <None Include="wwwroot\lib\jquery-3.3.1.js" />
-    <None Include="wwwroot\lib\masonry-4.2.1.js" />
     <None Include="wwwroot\lib\vue-2.5.13.js" />
   </ItemGroup>
 
@@ -49,11 +45,11 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="yarn run build:$(ConfigurationName)" />
+    <Exec Command="yarn -version &gt;nul 2&gt;&amp;1 &amp;&amp; ( yarn run build:$(ConfigurationName) ) || ( echo yarn not installed. use npm install on the project folder to install it )" />
     <Exec Command="REM graphdoc -e http://localhost:36140/api -o ./wwwroot/gqldocs --force" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="yarn install" />
+    <Exec Command="yarn -version &gt;nul 2&gt;&amp;1 &amp;&amp; ( yarn install ) || ( echo yarn not installed. use npm install on the project folder to install it )" />
   </Target>
 </Project>

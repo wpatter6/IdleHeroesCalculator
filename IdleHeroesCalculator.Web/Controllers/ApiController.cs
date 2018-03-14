@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using IdleHeroesCalculator.Web.Graph.Models;
 using Newtonsoft.Json.Serialization;
+using System.Linq;
 
 namespace IdleHeroesCalculator.Web.Controllers
 {
@@ -36,13 +37,19 @@ namespace IdleHeroesCalculator.Web.Controllers
                 if (variables != null)
                 {
                     //Don't bother to update cache if newer than app start
-                    if(variables.CacheDate > _startDate.StartDateUnixTicks) return Ok("");
+                    if(variables.CacheDate > _startDate.StartDateUnixTicks)
+                        return StatusCode(200);
                 }
             }
 
             var executionOptions = new ExecutionOptions { Schema = _schema, Query = query.Query };
             
             var result = await _documentExecutor.ExecuteAsync(executionOptions).ConfigureAwait(false);
+
+            if(result.Errors != null && result.Errors.Any())
+            {
+                return StatusCode(500, result);
+            }
             
             return Ok(result);
         }

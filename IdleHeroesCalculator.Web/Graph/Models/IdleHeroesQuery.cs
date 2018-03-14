@@ -18,6 +18,7 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 
             Field<ListGraphType<HeroDataGraphType>>(
                 "heroData",
+                "Template level data about heroes.",
                 arguments: new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "name", Description = "Name of the hero." },
                     new QueryArgument<RoleGraphType> { Name = "role", Description = "The role of the hero." }, 
@@ -110,6 +111,7 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 
             Field<HeroGraphType>(
                 "hero",
+                "Instance level data about heroes.",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "name", Description = "Name of the hero instance." },
                     new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "stars", Description = "Number of stars of the hero instance." }
@@ -122,6 +124,34 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                     return hero;
                 }
             );
+
+            /*
+            Field<ListGraphType<RoleDetailsGraphType>>(
+                "roles",
+                resolve: context =>
+                {
+                    var result = new List<Roles>();
+                    foreach (var val in Enum.GetValues(typeof(Roles)))
+                    {
+                        result.Add((Roles)val);
+                    }
+                    return result;
+                }
+            );
+
+            Field<ListGraphType<FactionDetailsGraphType>>(
+                "factions",
+                resolve: context =>
+                {
+                    var result = new List<Factions>();
+                    foreach (var val in Enum.GetValues(typeof(Factions)))
+                    {
+                        result.Add((Factions)val);
+                    }
+                    return result;
+                }
+            );
+            */
         }
     }
 }
