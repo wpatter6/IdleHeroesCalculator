@@ -16,7 +16,7 @@
     <Folder Include="Data\" />
     <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\lib\" />
-    <Folder Include="wwwroot\gqldocs\" />
+    <Folder Include="wwwroot\api\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +46,7 @@
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="yarn -version &gt;nul 2&gt;&amp;1 &amp;&amp; ( yarn run build:$(ConfigurationName) ) || ( echo yarn not installed. use npm install on the project folder to install it )" />
-    <Exec Command="REM graphdoc -e http://localhost:36140/api -o ./wwwroot/gqldocs --force" />
+    <Exec Command="REM graphdoc -e http://localhost:36140/api -o ./wwwroot/api --force" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
