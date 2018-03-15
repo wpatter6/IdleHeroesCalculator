@@ -8,7 +8,7 @@ namespace IdleHeroesCalculator.Web.Graph.Types
 {
     public class HeroGraphType : ObjectGraphType<Hero>
     {
-        public HeroGraphType(IUpgradeDataService upgradeCostService)
+        public HeroGraphType(IUpgradeService upgradeCostService)
         {
             Name = "Hero";
 

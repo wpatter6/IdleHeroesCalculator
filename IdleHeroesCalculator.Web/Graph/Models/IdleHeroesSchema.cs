@@ -7,12 +7,12 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 {
     public class IdleHeroesSchema : Schema
     {
-        public IdleHeroesSchema (Func<Type, GraphType> resolveType, IUpgradeDataService upgradeCostService)
+        public IdleHeroesSchema (Func<Type, GraphType> resolveType, IUpgradeService upgradeService)
             : base(resolveType)
         {
             Query = (IdleHeroesQuery)resolveType(typeof(IdleHeroesQuery));
 
-            RegisterTypes(new FactionGraphType(), new RoleGraphType(), new HeroDataGraphType(), new HeroGraphType(upgradeCostService));
+            RegisterTypes(new FactionGraphType(), new RoleGraphType(), new HeroDataGraphType(), new HeroGraphType(upgradeService), new FactionDetailsGraphType(), new RoleDetailsGraphType());
         }
     }
 }

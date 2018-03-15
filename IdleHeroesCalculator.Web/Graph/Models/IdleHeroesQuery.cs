@@ -124,8 +124,7 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                     return hero;
                 }
             );
-
-            /*
+            
             Field<ListGraphType<RoleDetailsGraphType>>(
                 "roles",
                 resolve: context =>
@@ -151,7 +150,6 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                     return result;
                 }
             );
-            */
         }
     }
 }

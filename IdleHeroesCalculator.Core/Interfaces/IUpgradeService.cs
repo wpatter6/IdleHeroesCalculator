@@ -6,9 +6,10 @@ using System.Text;
 
 namespace IdleHeroesCalculator.Core.Interfaces
 {
-    public interface IUpgradeDataService : IDataService
+    public interface IUpgradeService
     {
-        List<UpgradeData> GetAllUpgradeData();
-        List<UpgradeData> GetUpgradeData(Expression<Func<UpgradeData, bool>> predicate);
+        Costs GetCosts(Hero hero);
+        IEnumerable<Costs> GetCosts(Hero hero, int fromStars, int toStars);
     }
 }
+

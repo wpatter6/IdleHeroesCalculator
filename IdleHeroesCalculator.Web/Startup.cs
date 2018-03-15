@@ -80,6 +80,7 @@ namespace IdleHeroesCalculator.Web
                 .AddTransient<IHeroService, HeroService>()
                 .AddTransient<IRawDataService, CsvRawDataService>()
                 .AddTransient<IUpgradeDataService, UpgradeDataService>()
+                .AddTransient<IUpgradeService, UpgradeService>()
                 .AddScoped<IDocumentExecuter, DocumentExecuter>()
                 .AddScoped<IdleHeroesQuery>()
                 .AddSingleton(new ProgramStartDate())
@@ -97,7 +98,7 @@ namespace IdleHeroesCalculator.Web
             
             var serviceProvider = services.BuildServiceProvider();
             services.AddScoped<ISchema>(_ => new IdleHeroesSchema(type => (GraphType)serviceProvider.GetService(type),
-                serviceProvider.GetService<IUpgradeDataService>()) { Query = serviceProvider.GetService<IdleHeroesQuery>() });
+                serviceProvider.GetService<IUpgradeService>()) { Query = serviceProvider.GetService<IdleHeroesQuery>() });
             
             return services;
         }
