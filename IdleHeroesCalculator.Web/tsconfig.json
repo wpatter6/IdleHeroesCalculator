@@ -2,14 +2,16 @@
   "compilerOptions": {
     "allowJs": true,
     "alwaysStrict": true,
+    "module": "es2015",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noEmitOnError": true,
     "removeComments": true,
     "sourceMap": true,
+    "strict": true,
     "target": "es5"
   },
-  "include": [ "./Scripts/*" ],
+  "include": [ "./Scripts/main.ts" ],
   "exclude": [
     "webpack.config.js",
     "node_modules",

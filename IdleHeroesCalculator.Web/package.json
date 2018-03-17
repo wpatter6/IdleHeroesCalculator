@@ -8,11 +8,12 @@
     "clean-webpack-plugin": "^0.1.18",
     "css-loader": "^0.28.10",
     "extract-text-webpack-plugin": "next",
+    "isomorphic-fetch": "^2.2.1",
     "less": "^2.3.1",
     "less-loader": "^4.0.6",
+    "nock": "^9.2.3",
     "style-loader": "^0.20.2",
     "typescript": "^2.7.2",
-    "vue": "^2.5.13",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.10",
     "yarn": "^1.5.1"

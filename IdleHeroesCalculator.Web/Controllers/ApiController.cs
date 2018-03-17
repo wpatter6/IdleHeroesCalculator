@@ -38,7 +38,7 @@ namespace IdleHeroesCalculator.Web.Controllers
                 {
                     //Don't bother to update cache if newer than app start
                     if(variables.CacheDate > _startDate.StartDateUnixTicks)
-                        return StatusCode(200);
+                        return Ok(new object());
                 }
             }
 

@@ -3,59 +3,53 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Idle Heroes Calculator</title>
     <base href="~/" />
+    <link rel="stylesheet" href="https://gitcdn.link/repo/Chalarangelo/mini.css/master/dist/mini-dark.min.css">
 
-    @*Static content for development*@
+    @*css content for development*@
     <environment include="Development">
         <script src="~/dist/styles.js" asp-append-version="true"></script>
-        @*
-        <script src="~/lib/jquery-3.3.1.js"></script>
-        <script src="~/lib/infinite-scroll-3.0.3.js"></script>
-        <script src="~/lib/masonry-4.2.1.js"></script>
-        <script src="~/lib/imagesloaded-4.1.4.js"></script>
-        *@
-        <script src="~/lib/vue-2.5.13.js"></script>
-        <script src="~/lib/axios-0.18.0.js"></script>
-
-
-        <script src="~/dist/scripts.js" asp-append-version="true"></script>
     </environment>
-
-    @*Static content for production*@
+    @*css content for production*@
     <environment exclude="Development">
         <link rel="stylesheet" type="text/css" href="~/dist/styles.css" asp-append-version="true" />
-        @*
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery-3.3.1.js"
-                asp-fallback-test="window.jQuery"></script>
-
-        <script src="https://unpkg.com/infinite-scroll@3.0.3/dist/infinite-scroll.pkgd.min.js"
-                asp-fallback-src="~/lib/infinite-scroll-3.0.3.js"
-                asp-fallback-test="window.jQuery.fn.infiniteScroll"></script>
-
-        <script src="https://unpkg.com/masonry-layout@4.2.1/dist/masonry.pkgd.min.js"
-                asp-fallback-src="~/lib/masonry-4.2.1.js"
-                asp-fallback-test="window.jQuery.fn.masonry"></script>
-
-        <script src="https://unpkg.com/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"
-                asp-fallback-src="~/lib/imagesloaded-4.1.4.js"
-                asp-fallback-test="window.jQuery.fn.imagesLoaded"></script>
-        *@
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.min.js"
-                asp-fallback-src="~/lib/axios-0.18.0.js"
-                asp-fallback-test="window.Vue"></script>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"
-                asp-fallback-src="~/lib/axios-0.18.0.js"
-                asp-fallback-test="window.axios"></script>
     </environment>
 
-    <script src="~/dist/scripts.js" asp-append-version="true"></script>
+    @RenderSection("head", false)
 </head>
 <body>
-    <span id="test"></span>
+    <header class="sticky">
+        <label class="drawer-toggle button" for="navigation-toggle"></label>
+        <a href="~/" class="logo">Idle Heroes Calculator</a>
+        <a href="~/fusion" class="button hidden-sm">Fusion</a>
+        <a href="~/api" class="button hidden-sm">Api</a>
+        @RenderSection("topnav", false)
+    </header>
+    <input type="checkbox" id="navigation-toggle">
+    <nav class="drawer hidden-md hidden-lg">
+        <label class="close" for="navigation-toggle"></label>
+        <div class="button-group">
+            <a href="~/fusion">Fusion</a>
+        </div>
+        <div class="button-group">
+            <a href="~/api">Api</a>
+        </div>
+    </nav>
+    <span id="test">{{message}}</span>
     @RenderBody()
+    @*js content for development*@
+    <environment include="Development">
+        <script src="~/lib/vue-2.5.13.js"></script>
+        <script src="~/dist/scripts.js" asp-append-version="true"></script>
+    </environment>
+    @*js content for production*@
+    <environment exclude="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.min.js"
+                asp-fallback-src="~/lib/vue-2.5.13.js"
+                asp-fallback-test="window.Vue"></script>
+        <script src="~/dist/scripts.js" asp-append-version="true"></script>
+    </environment>
 </body>
 </html>

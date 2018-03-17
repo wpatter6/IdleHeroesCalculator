@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <None Remove="Scripts\app\app.ts" />
+    <None Remove="Scripts\app\ihc-interfaces.ts" />
+    <None Remove="Scripts\app\ihc.ts" />
+    <None Remove="Scripts\app\vue-components.ts" />
     <None Remove="Scripts\main.ts" />
     <None Remove="npm-debug.log" />
     <None Remove="Scripts\Scroller.ts" />
@@ -14,13 +17,17 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Styles\font\" />
     <Folder Include="wwwroot\dist\" />
-    <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\api\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\lib\axios-0.18.0.js" />
+    <None Include="wwwroot\font\fontello.eot" />
+    <None Include="wwwroot\font\fontello.svg" />
+    <None Include="wwwroot\font\fontello.ttf" />
+    <None Include="wwwroot\font\fontello.woff" />
+    <None Include="wwwroot\font\fontello.woff2" />
     <None Include="wwwroot\lib\vue-2.5.13.js" />
   </ItemGroup>
 
@@ -37,6 +44,9 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\app\app.ts" />
+    <TypeScriptCompile Include="Scripts\app\ihc.ts" />
+    <TypeScriptCompile Include="Scripts\app\ihc-interfaces.ts" />
+    <TypeScriptCompile Include="Scripts\app\vue-components.ts" />
     <TypeScriptCompile Include="Scripts\main.ts" />
   </ItemGroup>
 

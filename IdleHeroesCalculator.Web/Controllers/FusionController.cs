@@ -1,22 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace IdleHeroesCalculator.Web.Controllers
 {
-    public class HomeController : Controller
+    public class FusionController : Controller
     {
         public IActionResult Index()
         {
-            return View();
-        }
-        
-        public IActionResult Error()
-        {
-            ViewData["RequestId"] = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
             return View();
         }
     }

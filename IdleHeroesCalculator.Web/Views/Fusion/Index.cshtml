@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Fusion";
+}
+@section topnav {
+    <label class="button icon-filter hidden-lg" style="float:right" for="filter-toggle">&nbsp;</label>
+}
+<input type="checkbox" id="filter-toggle">
+<nav id="filter-drawer" class="drawer">
+    <label class="close" for="filter-toggle"></label>
+    <i class="icon-filter"></i>FUSION FILTERS
+    <ul id="filters" class="flist">
+        <filter-items></filter-items>
+    </ul>
+</nav>
