@@ -6,14 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Idle Heroes Calculator</title>
     <base href="~/" />
-    <link rel="stylesheet" href="https://gitcdn.link/repo/Chalarangelo/mini.css/master/dist/mini-dark.min.css">
 
     @*css content for development*@
     <environment include="Development">
+        <link rel="stylesheet" href="~/lib/mini-dark-2.3.7.css" />
         <script src="~/dist/styles.js" asp-append-version="true"></script>
     </environment>
     @*css content for production*@
     <environment exclude="Development">
+        <link rel="stylesheet" href="https://gitcdn.link/repo/Chalarangelo/mini.css/master/dist/mini-dark.min.css"
+              asp-fallback-href="~/lib/mini-dark-2.3.7.css"
+              asp-fallback-test-class="hidden"
+              asp-fallback-test-property="display"
+              asp-fallback-test-value="none">
         <link rel="stylesheet" type="text/css" href="~/dist/styles.css" asp-append-version="true" />
     </environment>
 
@@ -22,7 +27,8 @@
 <body>
     <header class="sticky">
         <label class="drawer-toggle button" for="navigation-toggle"></label>
-        <a href="~/" class="logo">Idle Heroes Calculator</a>
+        <a href="~/" class="logo hidden-sm">Idle Heroes Calculator</a>
+        <a href="~/" class="logo hidden-md hidden-lg">Calculator</a>
         <a href="~/fusion" class="button hidden-sm">Fusion</a>
         <a href="~/api" class="button hidden-sm">Api</a>
         @RenderSection("topnav", false)
@@ -37,7 +43,6 @@
             <a href="~/api">Api</a>
         </div>
     </nav>
-    <span id="test">{{message}}</span>
     @RenderBody()
     @*js content for development*@
     <environment include="Development">

@@ -1,21 +1,35 @@
 ﻿import * as ihc from './ihc'
 
-declare var Vue: any;
+let filterElement = document.getElementById("filters");
+let filterVue: any = {};
+if (filterElement) {
+    ihc.api(`{${ihc.factions},${ihc.roles}}`, true)
+        .then(x => {
+            filterVue = new Vue({
+                el: filterElement,
+                data: x,
+                methods: {
+                    filter: function (event: any) {
+                        console.log("clickevent", event);
+                        console.log("clicked ID", event.currentTarget);
+                    }
+                }
+            })
+        });
+}
 
-var myvue = new Vue({
-    el: "#test",
-    data: { message: "HELLO" }
-});
-
-ihc.api("{factions{id,name,img},roles{id,name,img}}", true)
-    .then(x => {
-        if (x) {
-            console.table(x.factions);
-            console.table(x.roles);
-            var v = new Vue({
-                el: "#filters",
-                data: x
+let heroesElement = document.getElementById("heroes");
+let heroesVue: any = {};
+if (heroesElement) {
+    ihc.api(`{${ihc.heroes()}}`)
+        .then(x => {
+            heroesVue = new Vue({
+                el: heroesElement,
+                data: x,
+                methods: {
+                
+                }
             });
-            console.log(v);
-        }
-    });
+        });
+}
+

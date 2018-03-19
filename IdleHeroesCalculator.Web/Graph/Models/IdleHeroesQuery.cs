@@ -21,7 +21,7 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                 "Template level data about heroes.",
                 arguments: new QueryArguments(
                     new QueryArgument<StringGraphType> { Name = "name", Description = "Name of the hero." },
-                    new QueryArgument<RoleGraphType> { Name = "role", Description = "The role of the hero." }, 
+                    new QueryArgument<RoleGraphType> { Name = "role", Description = "The role of the hero." },
                     new QueryArgument<FactionGraphType> { Name = "faction", Description = "The faction of the hero." }
                 ),
                 resolve: context =>
@@ -86,10 +86,10 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 
                     if (!string.IsNullOrEmpty(search))
                         heroes = heroes.Where(x => x.Name.ToLower().Contains(search.ToLower()));
-                    
+
                     if (orderBy != null && orderBy.Any())
                     {
-                        for(var i = orderBy.Count() - 1; i >= 0; i--)
+                        for (var i = orderBy.Count() - 1; i >= 0; i--)
                         {
                             var itemSplit = orderBy.ElementAt(i).Split(':');
                             var prop = itemSplit.ElementAtOrDefault(0);
@@ -104,7 +104,7 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 
                     if (take.HasValue)
                         heroes = heroes.Take(take.Value);
-                    
+
                     return heroes;
                 }
             );
@@ -124,14 +124,26 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                     return hero;
                 }
             );
-            
+
             Field<ListGraphType<RoleDetailsGraphType>>(
                 "roles",
+                "Data about hero roles.",
+                arguments: new QueryArguments(
+                    new QueryArgument<BooleanGraphType> { Name = "real", Description = "Tells if this is a real or abstract role." }
+                ),
                 resolve: context =>
                 {
+                    var real = context.GetArgument("real", false);
                     var result = new List<Roles>();
+
+                    var abstractValues = new string[]
+                    {
+                      "Unknown", "Any", "Specific"
+                    };
+
                     foreach (var val in Enum.GetValues(typeof(Roles)))
                     {
+                        if (real && abstractValues.Contains(val.ToString())) continue;
                         result.Add((Roles)val);
                     }
                     return result;
@@ -140,11 +152,23 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 
             Field<ListGraphType<FactionDetailsGraphType>>(
                 "factions",
+                "Data about hero factions.",
+                arguments: new QueryArguments(
+                    new QueryArgument<BooleanGraphType> { Name = "real", Description = "Tells if this is a real or abstract faction." }
+                ),
                 resolve: context =>
                 {
+                    var real = context.GetArgument("real", false);
                     var result = new List<Factions>();
+
+                    var abstractValues = new string[]
+                    {
+                      "Unknown", "Any", "Specific"
+                    };
+
                     foreach (var val in Enum.GetValues(typeof(Factions)))
                     {
+                        if (real && abstractValues.Contains(val.ToString())) continue;
                         result.Add((Factions)val);
                     }
                     return result;

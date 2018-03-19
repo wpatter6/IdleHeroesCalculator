@@ -1,7 +1,116 @@
 ﻿@import (inline) "font/fontello.css";
+@import "mixins.less";
+@import "variables.less";
 
-@light-green: #42f49e;
+input[type=checkbox]:not(:checked) + .checkmark {
+    visibility: hidden;
+}
 
-body {
-    /*background-color: @light-green;*/
+input[type=checkbox]:checked + .checkmark {
+    visibility: visible;
+}
+
+#filter-drawer {
+    width: 225px;
+    display: inline-block;
+    vertical-align:top;
+}
+
+/* Hero Box */
+.hbox {
+    display: inline-block;
+    vertical-align: top;
+
+    .hlist {
+        display: inline-block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        padding: 10px;
+
+        .himg {
+            padding: 5px;
+            width: 20%;
+            min-width: 95px;
+            max-width: 200px;
+        }
+    }
+}
+
+/* Filter Box */
+.flist {
+    .user-select(none);
+    list-style-type: none;
+
+    .checkmark {
+        margin-left: -27px;
+    }
+
+    .fseperator {
+        height: 6px;
+        margin-bottom: 5px;
+        border-bottom: 2px solid @bg-navy;
+    }
+
+    .fitem:hover {
+        background-color: rgba(255, 255, 255, .1);
+    }
+
+    .fitem {
+        .border-radius;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 3px 25px;
+        vertical-align: middle;
+        margin-left: -25px;
+
+        * {
+            cursor: pointer;
+        }
+
+        .fimg {
+            width: 20px;
+            position:relative;
+            top: 3px;
+        }
+
+        .fname {
+        }
+    }
+}
+
+/* Desktop (lg) */
+@media screen and (min-width: 1280px) {
+    .hbox {
+        width: ~"calc(100% - 240px)";
+
+        .hlist {
+            padding: 50px;
+        }
+    }
+}
+
+/* Device (md) */
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+    .hbox {
+        width: ~"calc(100% - 240px)";
+
+        .hlist {
+            padding: 20px;
+        }
+    }
+}
+
+/* Device (sm) */
+@media screen and (max-width: 767px) {
+    .hbox{
+        .hlist{
+            padding: 10px;
+
+            .himg {
+                padding: 2px;
+            }
+        }
+    }
 }

@@ -2,13 +2,18 @@
     ViewData["Title"] = "Fusion";
 }
 @section topnav {
-    <label class="button icon-filter hidden-lg" style="float:right" for="filter-toggle">&nbsp;</label>
+    <label class="button icon-filter hidden-lg hidden-md" style="float:right" for="filter-toggle">&nbsp;</label>
 }
 <input type="checkbox" id="filter-toggle">
-<nav id="filter-drawer" class="drawer">
+<nav id="filter-drawer" class="drawer sticky">
     <label class="close" for="filter-toggle"></label>
-    <i class="icon-filter"></i>FUSION FILTERS
-    <ul id="filters" class="flist">
-        <filter-items></filter-items>
-    </ul>
+    <h4><i class="icon-filter"></i>FUSION FILTERS</h4>
+    <div id="filters" class="flist">
+        <filter-items :factions="factions" :roles="roles"></filter-items>
+    </div>
 </nav>
+<div class="hbox">
+    <div id="heroes" class="hlist">
+        <img v-for="h in heroes" :src="h.img" class="himg" />
+    </div>
+</div>
