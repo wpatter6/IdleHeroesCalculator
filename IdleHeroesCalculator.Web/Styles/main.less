@@ -16,6 +16,17 @@ input[type=checkbox]:checked + .checkmark {
     vertical-align:top;
 }
 
+/* Header overrides */
+header {
+    .logo {
+        line-height: 1.5;
+    }
+
+    a.button {
+        vertical-align: initial;
+    }
+}
+
 /* Hero Box */
 .hbox {
     display: inline-block;
@@ -34,6 +45,10 @@ input[type=checkbox]:checked + .checkmark {
             min-width: 95px;
             max-width: 200px;
             cursor: pointer;
+
+            &:hover {
+                background-color: @bg-navy-light;
+            }
         }
     }
 }
@@ -68,6 +83,7 @@ input[type=checkbox]:checked + .checkmark {
 
         * {
             cursor: pointer;
+            color: @nav-text;
         }
 
         .fimg {
@@ -85,7 +101,14 @@ input[type=checkbox]:checked + .checkmark {
 
         .hlist {
             padding: 50px;
+
+            .himg {
+                border-radius: 40px;
+            }
         }
+    }
+    nav.sticky {
+        position: sticky !important;
     }
 }
 
@@ -96,7 +119,14 @@ input[type=checkbox]:checked + .checkmark {
 
         .hlist {
             padding: 20px;
+
+            .himg {
+                border-radius: 33px;
+            }
         }
+    }
+    nav.sticky {
+        position: sticky !important;
     }
 }
 
@@ -108,6 +138,7 @@ input[type=checkbox]:checked + .checkmark {
 
             .himg {
                 padding: 2px;
+                border-radius: 20px;
             }
         }
     }

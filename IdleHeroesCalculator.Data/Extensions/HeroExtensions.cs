@@ -12,8 +12,12 @@ namespace IdleHeroesCalculator.Data.Extensions
                 img3 = string.IsNullOrEmpty(hero.Img3) ? null : hero.Img3,
                 defaultImage = hero.Faction.GetDescription();
 
-            if (hero.Stars == hero.MaxStars) return img1 ?? img2 ?? img3 ?? defaultImage;
-            if ((hero.Stars > 5 && hero.MaxStars == 10) || (hero.Stars > 4 && hero.MaxStars == 9)) return img2 ?? img1 ?? defaultImage;
+            if (hero.Stars == hero.MaxStars || hero.MaxStars == 9 && hero.Stars > 5)
+                return img1 ?? img2 ?? img3 ?? defaultImage;
+
+            if ((hero.MaxStars == 10 && hero.Stars > 5) || (hero.MaxStars == 9 && hero.Stars > 4))
+                return img2 ?? img1 ?? defaultImage;
+
             return img3 ?? img2 ?? img1 ?? defaultImage;
         }
 

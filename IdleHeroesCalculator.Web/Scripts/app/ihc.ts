@@ -5,7 +5,7 @@ declare var Vue: any;
 export const factions = "factions(real: true){id,name,img}",
     roles = "roles(real: true){id,name,img}";
 
-const heroesRequest = "heroes(take:{t},skip:{s},factions:[{f}],roles:[{r}],orderBy:[\"stars:desc\",\"faction\",\"name\"]){name,img,stars}";
+const heroesRequest = "heroes(take:{t},skip:{s},factions:[{f}],roles:[{r}],orderBy:[\"stars:desc\",\"faction\",\"name\"],upgrade:true){name,img,stars}";
 
 function api_base(query: string, variables: i.ihcApiVariables): Promise<any> {
     return fetch("/api", {

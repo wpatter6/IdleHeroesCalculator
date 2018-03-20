@@ -26,15 +26,12 @@ namespace IdleHeroesCalculator.Web
                 services.SetDependencies()
                     .InitializeDatabase()
                     .AddMvc();
-            
-            var heroInstanceService = services.BuildServiceProvider().GetService<IHeroService>();
-            heroInstanceService.CacheAllHeroes();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            SetEnvironmentName(env);
+            //SetEnvironmentName(env);
 
             if (env.IsDevelopment())
             {

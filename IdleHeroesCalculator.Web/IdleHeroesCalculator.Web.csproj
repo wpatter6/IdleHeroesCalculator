@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="Data\">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Folder>
     <Folder Include="Styles\font\" />
     <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\api\" />
@@ -48,6 +50,15 @@
     <TypeScriptCompile Include="Scripts\app\ihc-interfaces.ts" />
     <TypeScriptCompile Include="Scripts\app\vue-components.ts" />
     <TypeScriptCompile Include="Scripts\main.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\HeroData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\UpgradeData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>

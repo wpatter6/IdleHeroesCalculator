@@ -15,10 +15,6 @@ namespace IdleHeroesCalculator.Data.Services
         {
             _heroService = heroService;
         }
-        public void CacheAllHeroes()
-        {
-            //_heroCache = GetAllHeroes().ToList();
-        }
 
         public Hero GetHero(string name, int stars)
         {

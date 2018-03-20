@@ -30,18 +30,25 @@
         <a href="~/" class="logo hidden-sm">Idle Heroes Calculator</a>
         <a href="~/" class="logo hidden-md hidden-lg">Calculator</a>
         <a href="~/fusion" class="button hidden-sm">Fusion</a>
-        <a href="~/api" class="button hidden-sm">Api</a>
+        <a href="~/api" class="button hidden-sm" target="_blank">Api</a>
+        <a href="https://github.com/wpatter6/IdleHeroesCalculator" target="_blank" class="button hidden-sm">Github</a>
         @RenderSection("topnav", false)
     </header>
     <input type="checkbox" id="navigation-toggle">
     <nav class="drawer hidden-md hidden-lg">
         <label class="close" for="navigation-toggle"></label>
-        <div class="button-group">
-            <a href="~/fusion">Fusion</a>
-        </div>
-        <div class="button-group">
-            <a href="~/api">Api</a>
-        </div>
+        <h4>Idle Heroes Calculator</h4>
+        <ul class="flist">
+            <li class="fitem">
+                <a href="~/fusion">Fusion</a>
+            </li>
+            <li class="fitem">
+                <a href="~/api" target="_blank">Api</a>
+            </li>
+            <li class="fitem">
+                <a href="https://github.com/wpatter6/IdleHeroesCalculator" target="_blank">Github</a>
+            </li>
+        </ul>
     </nav>
     @RenderBody()
     @*js content for development*@

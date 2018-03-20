@@ -57,7 +57,8 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                     new QueryArgument<ListGraphType<StringGraphType>> { Name = "names", Description = "Name of the hero instance." },
                     new QueryArgument<ListGraphType<FactionGraphType>> { Name = "factions", Description = "The factions of the heroes to return." },
                     new QueryArgument<ListGraphType<RoleGraphType>> { Name = "roles", Description = "The roles of the heroes to return." },
-                    new QueryArgument<ListGraphType<StringGraphType>> { Name = "orderBy", Description = "Ordering fields for results." }
+                    new QueryArgument<ListGraphType<StringGraphType>> { Name = "orderBy", Description = "Ordering fields for results." },
+                    new QueryArgument<BooleanGraphType> { Name = "upgrade", Description = "Set to true to only return heroes that are upgraded.", DefaultValue = false }
                 ),
                 resolve: context =>
                 {
@@ -69,6 +70,7 @@ namespace IdleHeroesCalculator.Web.Graph.Models
                     var factions = context.GetArgument<IEnumerable<Factions>>("factions");
                     var roles = context.GetArgument<IEnumerable<Roles>>("roles");
                     var orderBy = context.GetArgument<IEnumerable<string>>("orderBy");
+                    var upgrade = context.GetArgument<bool>("upgrade");
 
                     var heroes = heroService.GetAllHeroes();
 
@@ -86,6 +88,9 @@ namespace IdleHeroesCalculator.Web.Graph.Models
 
                     if (!string.IsNullOrEmpty(search))
                         heroes = heroes.Where(x => x.Name.ToLower().Contains(search.ToLower()));
+
+                    if (upgrade)
+                        heroes = heroes.Where(x => x.Stars > x.MinStars);
 
                     if (orderBy != null && orderBy.Any())
                     {

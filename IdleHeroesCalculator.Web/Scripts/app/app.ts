@@ -4,8 +4,7 @@ import * as i from './ihc-interfaces'
 let filterElement = document.getElementById("filters"),
     heroesElement = document.getElementById("heroes"),
     filterVue = {}, heroesVue: i.ihcHeroListObject,
-    page = 0, pageSize = document.body.clientWidth > 415 ? 40 : 30,
-    heroesList: i.ihcHeroBase[] = [], doScrollLoad = false;
+    page = 0, heroesList: i.ihcHeroBase[] = [], allowScrollLoad = false;
 
 if (filterElement) {
     getFilters();
@@ -13,21 +12,25 @@ if (filterElement) {
 
 if (heroesElement) {
     getHeroes();
+
+    window.addEventListener("scroll", function () {
+        if (shouldScrollLoad()) {
+            page++;
+            getHeroes();
+        }
+    });
 }
 
-window.addEventListener("scroll", function () {
-    if (shouldScrollLoad()) {
-        page++;
-        getHeroes();
-    }
-});
-
 function shouldScrollLoad(): boolean {
-    return doScrollLoad && window.scrollY / document.body.clientHeight > getScrollLoadHeight(page);
+    var scrollLoadHeight = getScrollLoadHeight(page),
+        scrollRatio = window.scrollY / document.body.clientHeight;
+
+    return allowScrollLoad && scrollRatio > scrollLoadHeight;
 }
 
 function getScrollLoadHeight(i: number): number {
-    return (i + 1) / (i + 3) + .1;
+    var add = (screen.width / screen.height) > 1 ? .1 : -.2;
+    return (i + 1) / (i + 3) + add;
 }
 
 function getFilter(): i.ihcHeroFilterObject {
@@ -45,7 +48,8 @@ function getFilter(): i.ihcHeroFilterObject {
 }
 
 function getHeroes(append: boolean = true): void {
-    var filter = getFilter();
+    var filter = getFilter(),
+        pageSize = getWindowPageSize();
 
     ihc.api(`{${ihc.heroes(page * pageSize, pageSize, filter.f, filter.r)}}`)
         .then(x => {
@@ -68,7 +72,7 @@ function getHeroes(append: boolean = true): void {
                 });
                 heroesList = heroesVue.heroes;
             }
-            doScrollLoad = true;
+            allowScrollLoad = x.heroes.length > 0;
         });
 }
 
@@ -82,7 +86,7 @@ function getFilters(): void {
                     filter: function (event: any) {
                         page = 0;
                         document.body.scrollTop = document.body.scrollHeight;
-                        doScrollLoad = false;
+                        allowScrollLoad = false;
 
                         let checkbox: HTMLInputElement = event.currentTarget.getElementsByTagName("input")[0];
                         checkbox.checked = !checkbox.checked;
@@ -91,4 +95,17 @@ function getFilters(): void {
                 }
             });
         });
+}
+
+function getWindowPageSize(): number {
+    let clientWidth = screen.width, maxImgWidth = 210,
+        rows = 10, cols = 3;
+
+    if (clientWidth > 1389) {
+        cols = 5 + Math.floor((clientWidth - 1390) / maxImgWidth)
+    } else if (clientWidth > 415) {
+        cols = 4;
+    }
+
+    return cols * rows;
 }
