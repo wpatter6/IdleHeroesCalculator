@@ -16,3 +16,15 @@ export interface ihcApiCacheable {
     factions: ihcApiFaction,
     cacheDate: number
 }
+export interface ihcHeroBase {
+    id: number,
+    name: string,
+    img: string
+}
+export interface ihcHeroListObject {
+    heroes: ihcHeroBase[]
+}
+export interface ihcHeroFilterObject {
+    f: number[],
+    r: number[]
+}

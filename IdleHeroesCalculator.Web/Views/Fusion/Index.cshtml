@@ -9,11 +9,11 @@
     <label class="close" for="filter-toggle"></label>
     <h4><i class="icon-filter"></i>FUSION FILTERS</h4>
     <div id="filters" class="flist">
-        <filter-items :factions="factions" :roles="roles"></filter-items>
+        <filter-items :factions="factions" :roles="roles" :filter="filter"></filter-items>
     </div>
 </nav>
 <div class="hbox">
     <div id="heroes" class="hlist">
-        <img v-for="h in heroes" :src="h.img" class="himg" />
+        <img v-for="h in heroes" :src="h.img" :id="h.name + '-' + h.stars" class="himg" @@click="heroClick" />
     </div>
 </div>

@@ -5,7 +5,7 @@ declare var Vue: any;
 export const factions = "factions(real: true){id,name,img}",
     roles = "roles(real: true){id,name,img}";
 
-const heroesRequest = "heroes(take:{t},skip:{s},factions:[{f}],roles:[{r}],orderBy:[\"stars:desc\",\"faction\",\"name\"]){name,img}";
+const heroesRequest = "heroes(take:{t},skip:{s},factions:[{f}],roles:[{r}],orderBy:[\"stars:desc\",\"faction\",\"name\"]){name,img,stars}";
 
 function api_base(query: string, variables: i.ihcApiVariables): Promise<any> {
     return fetch("/api", {
@@ -19,6 +19,7 @@ function api_base(query: string, variables: i.ihcApiVariables): Promise<any> {
         .then(response => response.json())
         .catch(reason => console.table(reason.errors));
 }
+
 export function api(query: string, cache: boolean = false): Promise<any> {
     let cacheDate = 0, data: i.ihcApiCacheable;
     if (cache) {
@@ -37,6 +38,7 @@ export function api(query: string, cache: boolean = false): Promise<any> {
             return data;
         });
 }
+
 export function apiToVue(query: string, element: HTMLElement, cache: boolean = false): Promise<any> {
     return api(query, cache)
         .then(x => {
@@ -47,11 +49,11 @@ export function apiToVue(query: string, element: HTMLElement, cache: boolean = f
         });
 }
 
-
 export function utc(date: Date = new Date()): number {
     return (date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 }
-export function heroes(factions: number[] = [], roles: number[] = [], skip: number = 0, take: number = 30): string {
+
+export function heroes(skip: number = 0, take: number = 30, factions: number[] = [], roles: number[] = []): string {
     return heroesRequest
         .replace("{t}", take.toString())
         .replace("{s}", skip.toString())
