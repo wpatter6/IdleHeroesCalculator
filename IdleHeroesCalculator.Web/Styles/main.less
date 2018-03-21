@@ -39,15 +39,69 @@ header {
         text-align: center;
         padding: 10px;
 
-        .himg {
-            padding: 5px;
-            width: 20%;
-            min-width: 95px;
-            max-width: 200px;
-            cursor: pointer;
+        .hero {
+            position: relative;
 
-            &:hover {
-                background-color: @bg-navy-light;
+            .hstar {
+                position: absolute;
+                z-index: 2;
+                height: 32px;
+                bottom: 75%;
+                pointer-events: none;
+            }
+
+            &.s9 img {
+                &:nth-last-of-type(1) {
+                    left: 23%;
+                }
+
+                &:nth-last-of-type(2) {
+                    left: 33%;
+                }
+
+                &:nth-last-of-type(3) {
+                    left: 43%;
+                }
+
+                &:nth-last-of-type(4) {
+                    left: 53%;
+                }
+            }
+
+            &.s8 img {
+                &:nth-last-of-type(1) {
+                    left: 28%;
+                }
+
+                &:nth-last-of-type(2) {
+                    left: 39%;
+                }
+
+                &:nth-last-of-type(3) {
+                    left: 50%;
+                }
+            }
+
+            &.s7 img {
+                &:nth-last-of-type(1) {
+                    left: 30%;
+                }
+
+                &:nth-last-of-type(2) {
+                    left: 44%;
+                }
+            }
+
+            .himg {
+                padding: 5px;
+                width: 20%;
+                min-width: 95px;
+                max-width: 200px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: @bg-navy-light;
+                }
             }
         }
     }
@@ -102,8 +156,14 @@ header {
         .hlist {
             padding: 50px;
 
-            .himg {
-                border-radius: 40px;
+            .hero {
+                .hstar {
+                    height: 50px;
+                    bottom: 95%;
+                }
+                .himg {
+                    border-radius: 40px;
+                }
             }
         }
     }
@@ -132,13 +192,20 @@ header {
 
 /* Device (sm) */
 @media screen and (max-width: 767px) {
-    .hbox{
-        .hlist{
+    .hbox {
+        .hlist {
             padding: 10px;
 
-            .himg {
-                padding: 2px;
-                border-radius: 20px;
+            .hero {
+                .hstar {
+                    height: 24px;
+                    bottom: 46%;
+                }
+
+                .himg {
+                    padding: 2px;
+                    border-radius: 20px;
+                }
             }
         }
     }

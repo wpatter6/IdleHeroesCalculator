@@ -2,18 +2,24 @@
     ViewData["Title"] = "Fusion";
 }
 @section topnav {
-    <label class="button icon-filter hidden-lg hidden-md" style="float:right" for="filter-toggle">&nbsp;</label>
+<label class="button icon-filter hidden-lg hidden-md" style="float:right" for="filter-toggle">
+    <span class="modal"></span>
+</label>
 }
-<input type="checkbox" id="filter-toggle">
+<input type="checkbox" class="nav-toggle" id="filter-toggle">
 <nav id="filter-drawer" class="drawer sticky right">
-    <label class="close" for="filter-toggle"></label>
+    <label class="close" for="filter-toggle">
+    </label>
     <h4><i class="icon-filter"></i>FUSION FILTERS</h4>
     <div id="filters" class="flist">
-        <filter-items :factions="factions" :roles="roles" :filter="filter"></filter-items>
+        <filter-items :factions="factions" :roles="roles" :filter="filter" :min-stars="5" :max-stars="10"></filter-items>
     </div>
 </nav>
 <div class="hbox">
     <div id="heroes" class="hlist">
-        <img v-for="h in heroes" :src="h.img" :id="h.name + '-' + h.stars" class="himg" @@click="heroClick" />
+        <span v-for="h in heroes" :class="'hero s' + h.stars">
+            <img :src="h.img" :id="h.name + '-' + h.stars" class="himg" @@click="heroClick" />
+            <img v-if="h.stars > 6 && h.stars < 10" v-for="s in h.stars-5" src="~/img/redstar.png" class="hstar" />
+        </span>
     </div>
 </div>

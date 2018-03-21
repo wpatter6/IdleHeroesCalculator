@@ -6,7 +6,7 @@ Vue.component("filter-item", {
                     <span>
                         <input type="checkbox" class="fcheck" :id="id" />
                         <i class="icon-ok checkmark"></i>
-                        <span><img :src="img" class="fimg" /></span>
+                        <span v-if="img"><img :src="img" class="fimg" /></span>
                         <span>
                             {{name}}
                         </span>
@@ -14,9 +14,11 @@ Vue.component("filter-item", {
                 </li>`});
 
 Vue.component("filter-items", {
-    props: ["factions", "roles", "filter"],
+    props: ["factions", "roles", "filter", "min-stars", "max-stars"],
     template: `<ul class="flist">
                     <filter-item v-for="f in factions" :img="f.img" :name="f.name" :id="'f-' + f.id" :key="'faction-' + f.id" @click.native="filter"></filter-item>
                     <li class="fseperator"/>
                     <filter-item v-for="r in roles" :img="r.img" :name="r.name" :id="'r-' + r.id" :key="'role-' + r.id" @click.native="filter"></filter-item>
+                    <li class="fseperator"/>
+                    <filter-item v-for="s in maxStars-minStars" :name="s + minStars + ' star'" :id="'s-' + (s + minStars)" :key="'star-' + (s + minStars)" @click.native="filter"></filter-item>
                 </ul>`});

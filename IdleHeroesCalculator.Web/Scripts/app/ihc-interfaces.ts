@@ -26,5 +26,6 @@ export interface ihcHeroListObject {
 }
 export interface ihcHeroFilterObject {
     f: number[],
-    r: number[]
+    r: number[],
+    s: number[]
 }

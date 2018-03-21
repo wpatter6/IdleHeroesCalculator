@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\font\fontello.eot" />
     <None Include="wwwroot\font\fontello.svg" />
     <None Include="wwwroot\font\fontello.ttf" />
@@ -50,6 +53,12 @@
     <TypeScriptCompile Include="Scripts\app\ihc-interfaces.ts" />
     <TypeScriptCompile Include="Scripts\app\vue-components.ts" />
     <TypeScriptCompile Include="Scripts\main.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

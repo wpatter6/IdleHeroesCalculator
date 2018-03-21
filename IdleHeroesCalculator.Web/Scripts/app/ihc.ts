@@ -5,7 +5,7 @@ declare var Vue: any;
 export const factions = "factions(real: true){id,name,img}",
     roles = "roles(real: true){id,name,img}";
 
-const heroesRequest = "heroes(take:{t},skip:{s},factions:[{f}],roles:[{r}],orderBy:[\"stars:desc\",\"faction\",\"name\"],upgrade:true){name,img,stars}";
+const heroesRequest = "heroes(take:{take},skip:{skip},factions:[{factions}],roles:[{roles}],stars:[{stars}],orderBy:[\"stars:desc\",\"faction\",\"name\"],upgrade:true){name,img,stars}";
 
 function api_base(query: string, variables: i.ihcApiVariables): Promise<any> {
     return fetch("/api", {
@@ -53,10 +53,11 @@ export function utc(date: Date = new Date()): number {
     return (date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 }
 
-export function heroes(skip: number = 0, take: number = 30, factions: number[] = [], roles: number[] = []): string {
+export function heroes(skip: number = 0, take: number = 30, factions: number[] = [], roles: number[] = [], stars: number[] = []): string {
     return heroesRequest
-        .replace("{t}", take.toString())
-        .replace("{s}", skip.toString())
-        .replace("{f}", factions.join(","))
-        .replace("{r}", roles.join(","));
+        .replace("{take}", take.toString())
+        .replace("{skip}", skip.toString())
+        .replace("{factions}", factions.join(","))
+        .replace("{roles}", roles.join(","))
+        .replace("{stars}", stars.join(","));
 }

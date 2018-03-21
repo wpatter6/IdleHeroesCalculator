@@ -21,6 +21,7 @@ if (heroesElement) {
     });
 }
 
+//determine if the current scrolling should trigger a page load
 function shouldScrollLoad(): boolean {
     var scrollLoadHeight = getScrollLoadHeight(page),
         scrollRatio = window.scrollY / document.body.clientHeight;
@@ -28,30 +29,32 @@ function shouldScrollLoad(): boolean {
     return allowScrollLoad && scrollRatio > scrollLoadHeight;
 }
 
+//get the current scroll distance that should trigger a page load
 function getScrollLoadHeight(i: number): number {
     var add = (screen.width / screen.height) > 1 ? .1 : -.2;
     return (i + 1) / (i + 3) + add;
 }
 
-function getFilter(): i.ihcHeroFilterObject {
-    let result: any = { f: [], r: [] };
+//gets the hero page size for scrolling based on window width and aspect ratio
+function getWindowPageSize(): number {
+    let clientWidth = screen.width, maxImgWidth = 210,
+        rows = 10, cols = 3;
 
-    let checkboxes = document.getElementsByClassName("fcheck");
-    for (var i = 0; i < checkboxes.length; i++) {
-        let checkbox = <HTMLInputElement>checkboxes[i];
-        if (!checkbox.checked) continue;
-
-        var sp = checkbox.id.split("-");
-        result[sp[0]].push(parseInt(sp[1]));
+    if (clientWidth > 1389) {
+        cols = 5 + Math.floor((clientWidth - 1390) / maxImgWidth)
+    } else if (clientWidth > 415) {
+        cols = 4;
     }
-    return result;
+
+    return cols * rows;
 }
 
+//gets hero object from API using the current filter
 function getHeroes(append: boolean = true): void {
     var filter = getFilter(),
         pageSize = getWindowPageSize();
 
-    ihc.api(`{${ihc.heroes(page * pageSize, pageSize, filter.f, filter.r)}}`)
+    ihc.api(`{${ihc.heroes(page * pageSize, pageSize, filter.f, filter.r, filter.s)}}`)
         .then(x => {
             if (heroesVue) {
                 if (append) {
@@ -76,6 +79,7 @@ function getHeroes(append: boolean = true): void {
         });
 }
 
+//gets filter object from API
 function getFilters(): void {
     ihc.api(`{${ihc.factions},${ihc.roles}}`, true)
         .then(x => {
@@ -97,15 +101,17 @@ function getFilters(): void {
         });
 }
 
-function getWindowPageSize(): number {
-    let clientWidth = screen.width, maxImgWidth = 210,
-        rows = 10, cols = 3;
+//gets the current filter off of the page
+function getFilter(): i.ihcHeroFilterObject {
+    let result: any = { f: [], r: [], s:[] };
 
-    if (clientWidth > 1389) {
-        cols = 5 + Math.floor((clientWidth - 1390) / maxImgWidth)
-    } else if (clientWidth > 415) {
-        cols = 4;
+    let checkboxes = document.getElementsByClassName("fcheck");
+    for (var i = 0; i < checkboxes.length; i++) {
+        let checkbox = <HTMLInputElement>checkboxes[i];
+        if (!checkbox.checked) continue;
+
+        var sp = checkbox.id.split("-");
+        result[sp[0]].push(parseInt(sp[1]));
     }
-
-    return cols * rows;
+    return result;
 }
