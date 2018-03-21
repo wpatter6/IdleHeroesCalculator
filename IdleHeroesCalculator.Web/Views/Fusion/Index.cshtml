@@ -16,7 +16,7 @@
     </div>
 </nav>
 <div class="hbox">
-    <div id="heroes" class="hlist">
+    <div id="heroes" class="hlist" v-cloak>
         <span v-for="h in heroes" :class="'hero s' + h.stars">
             <img :src="h.img" :id="h.name + '-' + h.stars" class="himg" @@click="heroClick" />
             <img v-if="h.stars > 6 && h.stars < 10" v-for="s in h.stars-5" src="~/img/redstar.png" class="hstar" />
