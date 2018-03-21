@@ -4,7 +4,8 @@ import * as i from './ihc-interfaces'
 let filterElement = document.getElementById("filters"),
     heroesElement = document.getElementById("heroes"),
     filterVue = {}, heroesVue: i.ihcHeroListObject,
-    page = 0, heroesList: i.ihcHeroBase[] = [], allowScrollLoad = false;
+    page = 0, heroesList: i.ihcHeroBase[] = [], allowScrollLoad = false,
+    mdWidth = 768, lgWidth = 1280;
 
 if (filterElement) {
     getFilters();
@@ -40,9 +41,9 @@ function getWindowPageSize(): number {
     let clientWidth = screen.width, maxImgWidth = 210,
         rows = 10, cols = 3;
 
-    if (clientWidth > 1389) {
+    if (clientWidth >= lgWidth) {
         cols = 5 + Math.floor((clientWidth - 1390) / maxImgWidth)
-    } else if (clientWidth > 415) {
+    } else if (clientWidth >= mdWidth) {
         cols = 4;
     }
 
