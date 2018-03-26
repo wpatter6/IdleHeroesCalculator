@@ -31,6 +31,7 @@ header {
 .hbox {
     display: inline-block;
     vertical-align: top;
+    position: relative;
 
     .hlist {
         display: inline-block;
@@ -38,74 +39,122 @@ header {
         margin-right: auto;
         text-align: center;
         padding: 10px;
+    }
+}
 
-        .hero {
-            position: relative;
+/* Calc Box */
+.cnest {
+    text-align: center;
+
+    button {
+        vertical-align: top;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .citem {
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .checkmark {
+            .border-radius(19%);
+            position: absolute;
             display: inline-block;
-            transition: all .2s;
-            padding: 10px;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            text-align: center;
+            padding-top: 23%;
+            z-index: 10;
+            cursor: pointer;
+            margin: 10px 10px 16px 10px;
 
-            .hstar {
-                position: absolute;
-                z-index: 2;
-                height: 22%;
-                bottom: 12%;
-                pointer-events: none;
-            }
-
-            &.s9 img {
-                &:nth-last-of-type(1) {
-                    left: 28%;
-                }
-
-                &:nth-last-of-type(2) {
-                    left: 38%;
-                }
-
-                &:nth-last-of-type(3) {
-                    left: 48%;
-                }
-
-                &:nth-last-of-type(4) {
-                    left: 58%;
-                }
-            }
-
-            &.s8 img {
-                &:nth-last-of-type(1) {
-                    left: 30%;
-                }
-
-                &:nth-last-of-type(2) {
-                    left: 41%;
-                }
-
-                &:nth-last-of-type(3) {
-                    left: 52%;
-                }
-            }
-
-            &.s7 img {
-                &:nth-last-of-type(1) {
-                    left: 33%;
-                }
-
-                &:nth-last-of-type(2) {
-                    left: 47%;
-                }
-            }
-
-            .himg {
-                width: 100%;
-                min-width: 95px;
-                max-width: 200px;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: @bg-navy-light;
-                }
+            i {
+                font-size: 2rem;
             }
         }
+    }
+
+    .fodder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.shade {
+    background: rgba(0, 0, 0, .5);
+}
+
+.hero {
+    position: relative;
+    display: inline-block;
+    transition: all @transition-time;
+    padding: 10px;
+    cursor: pointer;
+
+    .hstar {
+        position: absolute;
+        z-index: 2;
+        height: 22%;
+        bottom: 12%;
+    }
+
+    &.s9 img {
+        &:nth-last-of-type(1) {
+            left: 23%;
+        }
+
+        &:nth-last-of-type(2) {
+            left: 33%;
+        }
+
+        &:nth-last-of-type(3) {
+            left: 43%;
+        }
+
+        &:nth-last-of-type(4) {
+            left: 53%;
+        }
+    }
+
+    &.s8 img {
+        &:nth-last-of-type(1) {
+            left: 30%;
+        }
+
+        &:nth-last-of-type(2) {
+            left: 41%;
+        }
+
+        &:nth-last-of-type(3) {
+            left: 52%;
+        }
+    }
+
+    &.s7 img {
+        &:nth-last-of-type(1) {
+            left: 33%;
+        }
+
+        &:nth-last-of-type(2) {
+            left: 47%;
+        }
+    }
+
+    &.s6 img {
+        left: 40%;
+    }
+
+    .himg {
+        width: 100%;
+        min-width: 95px;
+        max-width: 200px;
     }
 }
 
@@ -129,7 +178,6 @@ header {
     }
 
     .fitem {
-        .border-radius;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -162,7 +210,7 @@ header {
 }
 
 .hlist-enter-active, .hlist-leave-active {
-    transition: all .2s;
+    transition: all @transition-time;
 }
 
 .hlist-enter, .hlist-leave-to {
@@ -171,7 +219,7 @@ header {
 }
 
 .hlist-move {
-    transition: transform .2s;
+    transition: transform @transition-time;
 }
 
 /* Desktop (lg) */

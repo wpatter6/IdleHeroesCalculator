@@ -17,12 +17,27 @@ export interface ihcApiCacheable {
     cacheDate: number
 }
 export interface ihcHeroBase {
-    id: number,
     name: string,
+    stars: number
+}
+export interface ihcHeroImg extends ihcHeroBase {
     img: string
 }
 export interface ihcHeroListObject {
-    heroes: ihcHeroBase[]
+    heroes: ihcHeroImg[],
+    selectedHero: ihcHeroDetail | null,
+    heroSelected: boolean
+}
+export interface ihcHeroDetail extends ihcHeroImg {
+    minSpirit: number,
+    maxSpirit: number,
+    minGold: number,
+    maxGold: number,
+    minStones: number,
+    maxStones: number,
+    fodder: ihcHeroDetail[],
+    owned: boolean,
+    needed: boolean
 }
 export interface ihcHeroFilterObject {
     f: number[],

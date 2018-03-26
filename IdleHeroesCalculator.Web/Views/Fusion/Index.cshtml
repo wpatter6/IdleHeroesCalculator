@@ -15,13 +15,14 @@
         <filter-items :factions="factions" :roles="roles" :filter="filter" :min-stars="5" :max-stars="10"></filter-items>
     </div>
 </nav>
-<div class="hbox">
-    <div id="heroes" class="hlist" v-cloak>
+<div id="heroes" class="hbox">
+    <div class="hlist" v-if="!heroSelected" v-cloak>
         <transition-group name="hlist" tag="p">
-            <span v-for="h in heroes" :class="'hero s' + h.stars" :key="h.name + '-' + h.stars">
-                <img :src="h.img" :id="h.name + '-' + h.stars" class="himg" @@click="heroClick" />
-                <img v-if="h.stars > 6 && h.stars < 10" v-for="s in h.stars-5" src="~/img/redstar.png" class="hstar" />
-            </span>
+            <hero-item v-for="hero in heroes" @@click.native="heroClick" :hero="hero" :key="hero.name + '-' + hero.stars"></hero-item>
         </transition-group>
+    </div>
+    <div class="cnest" v-if="heroSelected" v-cloak>
+        <button @@click="heroSelected = false">Back</button>
+        <calc-item :hero="selectedHero" :first="true"></calc-item>
     </div>
 </div>
