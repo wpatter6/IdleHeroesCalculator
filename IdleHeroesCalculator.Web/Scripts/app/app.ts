@@ -11,7 +11,6 @@ let filterElement = document.getElementById("filters"),
     storedHeroes = <i.ihcHeroBase[]>JSON.parse(localStorage.getItem(ownedStorageKey) || "[]"),
     filterVue = {},
     heroesVue: i.ihcHeroListObject,
-    calcVue: any,
     page = 0, allowScrollLoad = false,
     mdWidth = 768, lgWidth = 1280;
 
@@ -26,101 +25,69 @@ if (heroesElement) {
     renderHeroes().then(x => {
         if (selectedHero) {
             let selectedSplit = selectedHero.split("-");
-            calculateForHero(selectedSplit[0].replace("_", " "), parseInt(selectedSplit[1]));
+            calculateForHero(selectedSplit[0].replace("_", " "), parseInt(selectedSplit[1]), true);
         }
     })
 }
 
 //triggers a calculation for a selected hero
-function calculateForHero(name: string, stars: number, setUrl: boolean = false, isNotFirst: boolean = false, parentId: string = "", fromFirst: boolean = true): Promise<any> {
+function calculateForHero(name: string, stars: number, setUrl: boolean = false) {
     if (setUrl) {
         setLocation(`${name} ${stars}* Fusion - ${appName}`, `fusion#${name.replace(" ", "_")}-${stars}`);
     }
     window.removeEventListener("scroll", windowScrollEvent);
 
-    return ihc.api(`{${ihc.heroQuery(name, stars, 1)}}`, true)
+    return ihc.api(`{${ihc.heroQuery(name, stars, 7)}}`, true)
         .then(data => {
-            let hero = <i.ihcHeroDetail>data.hero,
-                theHero: i.ihcHeroDetail | null = null;
-
-            if (!hero) return;
-
+            let hero = <i.ihcHeroDetail>data.hero;
             hero.owned = false;
+            
+            heroesVue.selectedHero = hero;//joinHeroes(hero);
+            heroesVue.selectedHero.id = nextId();
+            heroesVue.heroSelected = true;
 
-            if (!isNotFirst) {
-                heroesVue.selectedHero = hero;//joinHeroes(hero);
-                heroesVue.selectedHero.id = parentId = nextId();
-                heroesVue.heroSelected = true;
-                heroesVue.spirit = heroesVue.selectedHero.maxSpirit;
-                heroesVue.gold = heroesVue.selectedHero.maxGold;
-                heroesVue.stones = heroesVue.selectedHero.maxStones;
-            } else {
-                theHero = heroesVue.fodder.filter(x => x.id === parentId)[0];
-                if (theHero) {
-                    theHero.fodder = [];
-                }
-            }
-
-            let lastPromise: Promise<any> | null = null;
-
-            if (hero.fodder) {
-                for (let i = 0; i < hero.fodder.length; i++) {
-                    var f = hero.fodder[i];
-
-                    heroesVue.fodder.push(f);
-
-                    f.id = nextId();
-                    f.parentId = parentId;
-
-                    if (fromFirst && i === 0) {
-                        f.fromFirst = true;
-                        heroesVue.spirit += f.maxSpirit;
-                        heroesVue.gold += f.maxGold;
-                        heroesVue.stones += f.maxStones;
-                    } else {
-                        f.fromFirst = false;
-                        heroesVue.spirit += f.minSpirit;
-                        heroesVue.gold += f.minGold;
-                        heroesVue.stones += f.minStones;
-                    }
-
-                    if (theHero) {
-                        theHero.fodder.push(f);
-                    }
-                    
-                    if (lastPromise)
-                        lastPromise.then(x => calculateForHero(f.name, f.stars, false, true, f.id, f.fromFirst));
-                    else
-                        lastPromise = calculateForHero(f.name, f.stars, false, true, f.id, f.fromFirst);
-                }
-            }
-
-            return lastPromise;
+            addHeroChildren(hero);
+            calculateCosts();
         });
+}
+
+function addHeroChildren(hero: i.ihcHeroDetail) {
+    if (hero && hero.fodder) {
+        hero.fodder.forEach((h, i) => {
+            heroesVue.fodder.push(h);
+        });
+
+        hero.fodder.forEach((h, i) => {
+            h.id = h.id || nextId();
+            h.parentId = hero.id;
+            h.fromFirst = i === 0 && hero.fromFirst;
+
+            addHeroChildren(h);
+        });
+    }
 }
 
 //recursively remove hero's children
 function removeHeroChildren(hero: i.ihcHeroDetail) {
-    if (!hero) return;
+    if (hero && hero.fodder) {
+        hero.fodder.forEach(f => {
+            removeHeroChildren(f);
 
-    if (hero.fromFirst) {
-        heroesVue.spirit -= hero.maxSpirit;
-        heroesVue.gold -= hero.maxGold;
-        heroesVue.stones -= hero.maxStones;
-    } else {
-        heroesVue.spirit -= hero.minSpirit;
-        heroesVue.gold -= hero.minGold;
-        heroesVue.stones -= hero.minStones;
+            var idx = heroesVue.fodder.map(y => y.id).indexOf(f.id);
+            heroesVue.fodder.splice(idx, 1);
+        });
     }
+}
 
-    if (!hero.fodder) return;
-
-    hero.fodder.forEach(f => {
-        removeHeroChildren(f);
-
-        var idx = heroesVue.fodder.map(y => y.id).indexOf(f.id);
-        heroesVue.fodder.splice(idx, 1);
-    });
+//Determine the spirit/gold/stones cost for all current fodder
+function calculateCosts() {
+    if (heroesVue.selectedHero) {
+        heroesVue.spirit = heroesVue.selectedHero.maxSpirit + heroesVue.fodder.map(x => x.fromFirst ? x.maxSpirit : x.minSpirit).reduce((accumulator, currentValue) => accumulator + currentValue);
+        heroesVue.gold = heroesVue.selectedHero.maxGold + heroesVue.fodder.map(x => x.fromFirst ? x.maxGold : x.minGold).reduce((accumulator, currentValue) => accumulator + currentValue);
+        heroesVue.stones = heroesVue.selectedHero.maxStones + heroesVue.fodder.map(x => x.fromFirst ? x.maxStones : x.minStones).reduce((accumulator, currentValue) => accumulator + currentValue);
+    } else {
+        heroesVue.spirit = heroesVue.gold = heroesVue.stones = 0;
+    }
 }
 
 //connects heroes to their ancestors and sets their owned status based on local storage
@@ -270,8 +237,9 @@ function getHeroesVue(element: HTMLElement): i.ihcHeroListObject {
                 if (hero.owned) {
                     removeHeroChildren(hero);
                 } else {
-                    calculateForHero(hero.name, hero.stars, false, true, hero.id, hero.fromFirst);
+                    addHeroChildren(hero);
                 }
+                calculateCosts();
             },
             formatNumber: function (num: number, digits: number) {
                 var si = [
