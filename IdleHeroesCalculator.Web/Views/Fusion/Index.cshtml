@@ -22,7 +22,8 @@
         </transition-group>
     </div>
     <div class="cnest" v-if="heroSelected" v-cloak>
-        <button @@click="heroSelected = false">Back</button>
-        <calc-item :hero="selectedHero" :first="true"></calc-item>
+        <button @@click="clearSelected">Back</button>
+        <calc-item :hero="selectedHero" :fodder="fodder" :change="heroChange"></calc-item>
+        @*<calc-item :hero="selectedHero" :first="true"></calc-item>*@
     </div>
 </div>

@@ -26,9 +26,15 @@ export interface ihcHeroImg extends ihcHeroBase {
 export interface ihcHeroListObject {
     heroes: ihcHeroImg[],
     selectedHero: ihcHeroDetail | null,
-    heroSelected: boolean
+    heroSelected: boolean,
+    fodder: ihcHeroDetail[],
+    spirit: number,
+    gold: number,
+    stones: number
 }
 export interface ihcHeroDetail extends ihcHeroImg {
+    id: string, 
+    parentId: string,
     minSpirit: number,
     maxSpirit: number,
     minGold: number,
@@ -37,7 +43,8 @@ export interface ihcHeroDetail extends ihcHeroImg {
     maxStones: number,
     fodder: ihcHeroDetail[],
     owned: boolean,
-    needed: boolean
+    needed: boolean,
+    fromFirst: boolean
 }
 export interface ihcHeroFilterObject {
     f: number[],

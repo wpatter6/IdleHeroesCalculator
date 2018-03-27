@@ -13,7 +13,7 @@ namespace IdleHeroesCalculator.Web.Graph.Types
             Name = "Hero";
 
             Description = "An instance of a hero with a specified number of stars and upgrade costs.";
-            
+
             Field(x => x.Name).Description("The name of the hero.");
 
             Field(x => x.Stars).Description("The number of stars for the current hero.");
