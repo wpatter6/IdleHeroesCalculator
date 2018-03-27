@@ -22,10 +22,12 @@
         </transition-group>
     </div>
     <div class="cnest" v-if="heroSelected" v-cloak>
-        <button @@click="clearSelected">Back</button>
-        <span>Spirit: {{spirit.toLocaleString()}}</span>
-        <span>Gold: {{gold.toLocaleString()}}</span>
-        <span>Stones: {{stones.toLocaleString()}}</span><br/>
+        <div class="calchead sticky">
+            <button @@click="clearSelected"><i class="icon-left-big"></i></button>
+            <span class="calcamt spirit">{{formatNumber(spirit, 2)}}</span>
+            <span class="calcamt gold">{{formatNumber(gold, 2)}}</span>
+            <span class="calcamt stones">{{formatNumber(stones, 1)}}</span><br />
+        </div>
         <calc-item :hero="selectedHero" :fodder="fodder" :change="heroChange"></calc-item>
         @*<calc-item :hero="selectedHero" :first="true"></calc-item>*@
     </div>

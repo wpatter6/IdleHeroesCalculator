@@ -114,7 +114,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero(fodderHero)
                     {
-                        Name = fodderHero?.Name ?? _defaultHeroName,
+                        Name = fodderHero?.Name ?? currentFaction.ToString(),
                         Faction = currentFaction,
                         Stars = item.SpecificFodderHeroStars
                     });
@@ -125,7 +125,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero()
                     {
-                        Name = _defaultHeroName,
+                        Name = currentFaction.ToString(),
                         Faction = currentFaction,
                         Stars = item.TypedFodderHeroStars
                     });
@@ -135,7 +135,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero()
                     {
-                        Name = _defaultHeroName,
+                        Name = currentFaction.ToString(),
                         Faction = currentFaction,
                         Stars = item.TypedFodderHeroStars2
                     });
@@ -145,7 +145,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero()
                     {
-                        Name = _defaultHeroName,
+                        Name = Factions.Any.ToString(),
                         Faction = Factions.Any,
                         Stars = item.AnyFodderHeroStars
                     });

@@ -96,10 +96,12 @@ header {
     }
 }
 
+/* Shaded element */
 .shade {
     background: rgba(0, 0, 0, .5);
 }
 
+/* Individual Hero Image */
 .hero {
     position: relative;
     display: inline-block;
@@ -107,14 +109,22 @@ header {
     padding: 10px;
     cursor: pointer;
 
-    .hstar {
+    .star {
         position: absolute;
         z-index: 2;
-        height: 22%;
-        bottom: 12%;
+
+        &.h9 {
+            height: 22%;
+            bottom: 12%;
+        }
+
+        &.h5 {
+            height: 18%;
+            bottom: 12%;
+        }
     }
 
-    &.s9 img {
+    &.s9 > .stars > img {
         &:nth-last-of-type(1) {
             left: 23%;
         }
@@ -132,7 +142,7 @@ header {
         }
     }
 
-    &.s8 img {
+    &.s8 > .stars > img {
         &:nth-last-of-type(1) {
             left: 30%;
         }
@@ -146,7 +156,7 @@ header {
         }
     }
 
-    &.s7 img {
+    &.s7 > .stars > img {
         &:nth-last-of-type(1) {
             left: 33%;
         }
@@ -156,14 +166,96 @@ header {
         }
     }
 
-    &.s6 img {
+    &.s6 > .stars > img {
         left: 40%;
+    }
+
+    &.s5 > .stars > img {
+        &:nth-last-of-type(1) {
+            left: 18%;
+        }
+
+        &:nth-last-of-type(2) {
+            left: 29.5%;
+        }
+
+        &:nth-last-of-type(3) {
+            left: 41%;
+        }
+
+        &:nth-last-of-type(4) {
+            left: 52.5%;
+        }
+
+        &:nth-last-of-type(5) {
+            left: 64%;
+        }
+    }
+
+    &.s4 > .stars > img {
+        &:nth-last-of-type(1) {
+            left: 23%;
+        }
+
+        &:nth-last-of-type(2) {
+            left: 35%;
+        }
+
+        &:nth-last-of-type(3) {
+            left: 47%;
+        }
+
+        &:nth-last-of-type(4) {
+            left: 59%;
+        }
+    }
+
+    &.s3 > .stars > img {
+        &:nth-last-of-type(1) {
+            left: 30%;
+        }
+
+        &:nth-last-of-type(2) {
+            left: 41%;
+        }
+
+        &:nth-last-of-type(3) {
+            left: 52%;
+        }
     }
 
     .himg {
         width: 100%;
         min-width: 95px;
         max-width: 200px;
+    }
+}
+
+/* Calculation amount display */
+.calchead {
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+    & > * {
+        font-weight: bolder;
+        display: inline-block;
+        height: 55px;
+        min-width: 55px;
+    }
+
+    .calcamt {
+        line-height: 5.4;
+
+        &.spirit {
+            background: url(https://vignette.wikia.nocookie.net/idleheroes/images/1/18/Spirit-icon.png/revision/latest) center no-repeat/55px;
+        }
+
+        &.gold {
+            background: url(https://vignette.wikia.nocookie.net/idleheroes/images/0/0d/Gold-icon.png/revision/latest) center no-repeat/55px;
+        }
+
+        &.stones {
+            background: url(https://vignette.wikia.nocookie.net/idleheroes/images/2/26/Hero_Promotion_Stone-icon.png/revision/latest) center no-repeat/55px;
+        }
     }
 }
 

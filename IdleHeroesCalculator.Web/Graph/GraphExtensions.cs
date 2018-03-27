@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using IdleHeroesCalculator.Data.Extensions;
 
 namespace IdleHeroesCalculator.Web.Graph
 {
@@ -12,27 +13,22 @@ namespace IdleHeroesCalculator.Web.Graph
         {
             return ParseEnumValue(value, default(TEnum));
         }
-        public static TEnum ParseEnumValue<TEnum>(this IValue value, TEnum defaultValue) where TEnum : struct, IConvertible
+        public static TEnum ParseEnumValue<TEnum>(this IValue value, TEnum defaultValue = default(TEnum)) where TEnum : struct, IConvertible
         {
             if (!typeof(TEnum).IsEnum) 
             {
                 throw new ArgumentException("TEnum must be an enumerated type");
             }
-
-            var result = defaultValue;
-            if(value is StringValue && Enum.TryParse(((StringValue)value).Value, true, out result))
+            
+            if(value is StringValue)
             {
-                return result;
+                return EnumExtensions.ParseEnum(((StringValue)value).Value, defaultValue);
             }
             else if(value is IntValue)
             {
-                var intValue = ((IntValue)value).Value;
-                if(Enum.IsDefined(typeof(TEnum), intValue))
-                {
-                    return (TEnum)(object)intValue;
-                }
+                return EnumExtensions.ParseEnum(((IntValue)value).Value, defaultValue);
             }
-            return result;
+            return defaultValue;
         }
 
         public static IEnumerable<T> OrderByPropertyName<T>(this IEnumerable<T> list, string propertyName, string direction = "ASC")

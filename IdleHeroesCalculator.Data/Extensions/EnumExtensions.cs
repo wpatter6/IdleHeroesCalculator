@@ -22,5 +22,23 @@ namespace IdleHeroesCalculator.Data.Extensions
             // return description
             return displayAttribute?.Description;
         }
+
+        public static TEnum ParseEnum<TEnum>(string value, TEnum defaultValue = default(TEnum)) where TEnum : struct, IConvertible
+        {
+            if (Enum.TryParse(value, true, out TEnum result))
+            {
+                return result;
+            }
+            return defaultValue;
+        }
+
+        public static TEnum ParseEnum<TEnum>(int value, TEnum defaultValue = default(TEnum)) where TEnum : struct, IConvertible
+        {
+            if(Enum.IsDefined(typeof(TEnum), value))
+            {
+                return (TEnum)(object)value;
+            }
+            return defaultValue;
+        }
     }
 }

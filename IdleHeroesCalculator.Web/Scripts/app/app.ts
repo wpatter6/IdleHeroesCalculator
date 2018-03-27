@@ -56,10 +56,14 @@ function calculateForHero(name: string, stars: number, setUrl: boolean = false, 
                 heroesVue.stones = heroesVue.selectedHero.maxStones;
             } else {
                 theHero = heroesVue.fodder.filter(x => x.id === parentId)[0];
-                theHero.fodder = [];
+                if (theHero) {
+                    theHero.fodder = [];
+                }
             }
 
-            if (hero.fodder && hero.fodder.length) {
+            let lastPromise: Promise<any> | null = null;
+
+            if (hero.fodder) {
                 for (let i = 0; i < hero.fodder.length; i++) {
                     var f = hero.fodder[i];
 
@@ -83,10 +87,15 @@ function calculateForHero(name: string, stars: number, setUrl: boolean = false, 
                     if (theHero) {
                         theHero.fodder.push(f);
                     }
-
-                    calculateForHero(f.name, f.stars, false, true, f.id, f.fromFirst);
+                    
+                    if (lastPromise)
+                        lastPromise.then(x => calculateForHero(f.name, f.stars, false, true, f.id, f.fromFirst));
+                    else
+                        lastPromise = calculateForHero(f.name, f.stars, false, true, f.id, f.fromFirst);
                 }
             }
+
+            return lastPromise;
         });
 }
 
@@ -263,6 +272,25 @@ function getHeroesVue(element: HTMLElement): i.ihcHeroListObject {
                 } else {
                     calculateForHero(hero.name, hero.stars, false, true, hero.id, hero.fromFirst);
                 }
+            },
+            formatNumber: function (num: number, digits: number) {
+                var si = [
+                    { value: 1, symbol: "" },
+                    { value: 1E3, symbol: "k" },
+                    { value: 1E6, symbol: "M" },
+                    { value: 1E9, symbol: "G" },
+                    { value: 1E12, symbol: "T" },
+                    { value: 1E15, symbol: "P" },
+                    { value: 1E18, symbol: "E" }
+                ];
+                var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+                var i;
+                for (i = si.length - 1; i > 0; i--) {
+                    if (num >= si[i].value) {
+                        break;
+                    }
+                }
+                return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
             }
         }
     })

@@ -27,8 +27,11 @@ Vue.component("hero-item", {
     props: ["hero"],
     template:   `<span :class="'hero s' + hero.stars"  :id="hero.name + '-' + hero.stars">
                     <img :src="hero.img" class="himg" />
-                    <span v-if="hero.stars && hero.stars > 5 && hero.stars < 10">
-                        <img  v-for="s in hero.stars - 5" src= "/img/redstar.png" class="hstar" />
+                    <span v-if="hero.stars && hero.stars > 5 && hero.stars < 10" class="stars">
+                        <img v-for="s in hero.stars - 5" src= "/img/redstar.png" class="star h9" />
+                    </span>
+                    <span v-else-if="hero.stars && hero.stars < 6" class="stars">
+                        <img v-for="s in hero.stars" src= "/img/yellowstar.png" class="star h5" />
                     </span>
                 </span>`});
 
