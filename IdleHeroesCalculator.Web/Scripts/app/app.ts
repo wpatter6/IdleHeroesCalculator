@@ -93,9 +93,20 @@ function calculateForHero(name: string, stars: number, setUrl: boolean = false, 
 //recursively remove hero's children
 function removeHeroChildren(hero: i.ihcHeroDetail) {
     if (!hero.fodder) return;
-    hero.fodder.forEach(x => {
-        removeHeroChildren(x);
-        var idx = heroesVue.fodder.map(y => y.id).indexOf(x.id);
+    hero.fodder.forEach(f => {
+        removeHeroChildren(f);
+
+        if (f.fromFirst) {
+            heroesVue.spirit -= f.maxSpirit;
+            heroesVue.gold -= f.maxGold;
+            heroesVue.stones -= f.maxStones;
+        } else {
+            heroesVue.spirit -= f.minSpirit;
+            heroesVue.gold -= f.minGold;
+            heroesVue.stones -= f.minStones;
+        }
+
+        var idx = heroesVue.fodder.map(y => y.id).indexOf(f.id);
         heroesVue.fodder.splice(idx, 1);
     });
 }

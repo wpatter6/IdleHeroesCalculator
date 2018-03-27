@@ -23,6 +23,9 @@
     </div>
     <div class="cnest" v-if="heroSelected" v-cloak>
         <button @@click="clearSelected">Back</button>
+        <span>Spirit: {{spirit.toLocaleString()}}</span>
+        <span>Gold: {{gold.toLocaleString()}}</span>
+        <span>Stones: {{stones.toLocaleString()}}</span><br/>
         <calc-item :hero="selectedHero" :fodder="fodder" :change="heroChange"></calc-item>
         @*<calc-item :hero="selectedHero" :first="true"></calc-item>*@
     </div>
