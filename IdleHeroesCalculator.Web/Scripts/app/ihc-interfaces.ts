@@ -33,7 +33,8 @@ export interface ihcHeroImg extends ihcHeroBase {
 export interface ihcHeroListObject {
     heroes: ihcHeroImg[],
     selectedHero: ihcHeroDetail | null,
-    heroSelected: boolean,
+    showList: boolean,
+    showCalc: boolean,
     fodder: ihcHeroDetail[],
     displayFodder: ihcHeroDetail[]
     /*spirit: number,

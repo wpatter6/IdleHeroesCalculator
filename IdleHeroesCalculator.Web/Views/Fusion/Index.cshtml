@@ -1,9 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Fusion";
+    ViewData["Title"] = "Fusion Calculator";
 }
 @section topnav {
 <label class="button icon-filter hidden-lg hidden-md" style="float:right" for="filter-toggle">
-    <span class="modal"></span>
 </label>
 }
 <input type="checkbox" class="nav-toggle" id="filter-toggle">
@@ -17,7 +16,7 @@
                 <filter-items :factions="factions" :roles="roles" :filter="filter" :min-stars="5" :max-stars="10"></filter-items>
             </div>
         </div>
-        <div class="calcagg" :key="2" v-else>
+        <div v-else class="calcagg" :key="2">
             <h4><i class="icon-filter"></i>FUSION COSTS</h4>
             <span class="calcamt spirit"><span class="hcount">{{formatNumber(spirit, 2)}}</span></span>
             <span class="calcamt gold"><span class="hcount">{{formatNumber(gold, 2)}}</span></span>
@@ -28,16 +27,18 @@
         </div>
     </transition-group>
 </nav>
-
+<label class="drawer-modal" for="filter-toggle">
+    <span class="modal"></span>
+</label>
 
 <div id="heroes" class="hbox">
-    <div class="hlist" v-if="!heroSelected" v-cloak>
-        <h2>Select a hero to calculate</h2>
-        <transition-group name="hlist" tag="p">
+    <div class="hlist" v-if="showList" v-cloak>
+        <div class="stickyHeader"><h2>Select a hero</h2></div>
+        <transition-group name="hlist" tag="span">
             <hero-item v-for="hero in heroes" @@click.native="heroClick(hero)" :showCount="0" :hero="hero" :key="hero.name + '-' + hero.stars"></hero-item>
         </transition-group>
     </div>
-    <div class="cnest" v-if="heroSelected" v-cloak>
+    <div class="cnest" v-if="showCalc" v-cloak>
         <div class="calchead">
             <button @@click="clearSelected"><i class="icon-left-big"></i></button>
         </div>

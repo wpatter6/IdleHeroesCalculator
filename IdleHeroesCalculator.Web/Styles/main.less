@@ -121,15 +121,14 @@ header {
     .star {
         position: absolute;
         z-index: 2;
+        bottom: 12%;
 
         &.h9 {
             height: 22%;
-            bottom: 12%;
         }
 
         &.h5 {
             height: 18%;
-            bottom: 12%;
         }
     }
 
@@ -236,7 +235,6 @@ header {
     .himg {
         width: 100%;
     }
-
 }
 
 .hcount {
@@ -326,6 +324,10 @@ header {
         display: inline-block;
         padding: 1px;
 
+        .star {
+            bottom: 7%;
+        }
+
         .himg {
             width: 100%;
             height: 100%;
@@ -354,6 +356,19 @@ header {
     background: linear-gradient(@bg-head, @bg-navy);
 }
 
+.stickyHeader {
+    position: sticky;
+    top: 6px;
+    z-index: 1102;
+    text-transform: uppercase;
+    margin: 0 auto;
+    color: @color-head;
+}
+
+.cursor-default {
+    cursor: default !important;
+}
+
 [v-cloak] {
     display: none;
 }
@@ -375,13 +390,22 @@ header {
     transition: transform @transition-time;
 }
 
+label.drawer-modal {
+    position: absolute;
+}
+
+input[type=checkbox]:checked + .drawer + label.drawer-modal > .modal {
+    display: block;
+    z-index: 20;
+}
+
 /* Desktop (lg) */
 @media screen and (min-width: 1280px) {
     .hbox {
-        width: ~"calc(100% - 240px)";
+        width: ~"calc(100% - 300px)";
 
         .hlist {
-            padding: 50px;
+            padding: 0 50px;
 
             .hero {
                 width: 20%;
@@ -401,10 +425,10 @@ header {
 /* Device (md) */
 @media screen and (min-width: 768px) and (max-width: 1279px) {
     .hbox {
-        width: ~"calc(100% - 240px)";
+        width: ~"calc(100% - 300px)";
 
         .hlist {
-            padding: 20px;
+            padding: 0 20px;
 
             .hero {
                 width: 22%;
@@ -425,10 +449,10 @@ header {
     .flist .fitem {
         padding-top: 0;
     }
-
+    
     .hbox {
         .hlist {
-            padding: 10px;
+            padding: 0;
 
             .hero {
                 width: 30%;

@@ -7,11 +7,13 @@ export const factionsQuery = "factions(real: true){id,name,img}",
 
 const heroesRequest = "heroes(take:{take},skip:{skip},factions:[{factions}],roles:[{roles}],stars:[{stars}],orderBy:[\"stars:desc\",\"faction\",\"name\"],upgrade:true){name,img,stars}",
     heroFields = "name,img,url,stars,minSpirit,maxSpirit,minGold,maxGold,minStones,maxStones,fodder{{heroFields}}",
-    heroArgs = "hero(name:\"{name}\",stars:{stars}){{heroFields}}";
+    heroArgs = "hero(name:\"{name}\",stars:{stars}){{heroFields}}",
+    heroImageFields = heroArgs.replace("{heroFields}", "img"),
+    heroImageCacheKey = "heroImages";
 
 let heroesVue: i.ihcHeroListObject;
 
-function api_base(query: string, variables: i.ihcApiVariables): Promise<any> {
+function api_base(query: string, variables: i.ihcApiVariables | null = null): Promise<any> {
     //console.log("api:", query);
     return fetch("/api", {
             body: JSON.stringify({
@@ -81,6 +83,17 @@ export function heroVue(el: HTMLElement, name: string, stars: number, depth: num
         
     }, false);
 }
+
+//get the identifier for the current hero
+export function heroIdentifier(hero: i.ihcHeroBase): string {
+    return identifier(hero.name, hero.stars);
+}
+
+//get the identifier for a hero with name and stars
+export function identifier(name: string, stars: number): string {
+    return `${name.replace(" ", "_")}-${stars}`;
+}
+
 
 function utc(date: Date = new Date()): number {
     return (date.getTime() + date.getTimezoneOffset() * 60 * 1000);

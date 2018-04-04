@@ -52,7 +52,8 @@ let panelElement = document.getElementById("hero-panel"),
         },
         clearSelected: function (event: any) {
             heroesVue.selectedHero = null;
-            heroesVue.heroSelected = false;
+            heroesVue.showList = true;
+            heroesVue.showCalc = false;
             heroesVue.fodder = [];
             heroesVue.displayFodder = [];
             panelVue.showFilter = true;
@@ -70,6 +71,8 @@ let panelElement = document.getElementById("hero-panel"),
             calculateCosts();
         }
     };
+
+window.addEventListener("scroll", globalScrollEvent);
 
 if (panelElement) {
     panelVue = getPanelVue(panelElement);
@@ -92,12 +95,13 @@ if (heroesElement) {
 function calculateForHero(name: string, stars: number, setUrl: boolean = false): void {
     setFodderScrollEvent();
     if (setUrl) {
-        setLocation(`${name} ${stars}* Fusion - ${appName}`, `fusion#${identifier(name, stars)}`);
+        setLocation(`${name} ${stars}* Fusion - ${appName}`, `fusion#${ihc.identifier(name, stars)}`);
     }
     fodderPage = 0;
     heroesVue.fodder = [];
     heroesVue.displayFodder = [];
     scrollToTop();
+    heroesVue.showList = false;
 
     ihc.api(`{${ihc.heroQuery(name, stars, 7)}}`)
         .then(data => {
@@ -112,7 +116,7 @@ function calculateForHero(name: string, stars: number, setUrl: boolean = false):
             calculateCosts();
 
             panelVue.showFilter = false;
-            heroesVue.heroSelected = true;
+            heroesVue.showCalc = true;
         });
 }
 
@@ -183,7 +187,7 @@ function calculateCosts(): void {
         heroesVue.fodder.forEach(x => {
             if (x.owned) return;
 
-            let heroId = heroIdentifier(x);
+            let heroId = ihc.heroIdentifier(x);
 
             if (!aggregate[heroId]) {
                 aggregate[heroId] = JSON.parse(JSON.stringify(x));
@@ -204,7 +208,6 @@ function calculateCosts(): void {
         });
 
         for (var agg in aggregate) {
-            console.log("agg", agg);
             aggregates.push(aggregate[agg]);
         }
 
@@ -216,7 +219,8 @@ function calculateCosts(): void {
         panelVue.spirit = panelVue.gold = panelVue.stones = 0;
         panelVue.aggregates = [];
         panelVue.showFilter = true;
-        heroesVue.heroSelected = false;
+        heroesVue.showList = true;
+        heroesVue.showCalc = false;
     }
 }
 
@@ -344,7 +348,8 @@ function getHeroesVue(element: HTMLElement): i.ihcHeroListObject {
     let result: i.ihcHeroListObject = {
         heroes: [],
         selectedHero: null,
-        heroSelected: false,
+        showList: true,
+        showCalc: false,
         fodder: [],
         displayFodder: []
     }
@@ -388,6 +393,20 @@ function repopulateDisplayFodder(): void {
     heroesVue.displayFodder = heroesVue.fodder.splice(0, Math.min(displayLength, heroesVue.fodder.length));
 }
 
+var stickyHideElements = document.getElementsByClassName("stickyHide");
+function globalScrollEvent(): void {
+
+    for (var i = 0; i < stickyHideElements.length; i++) {
+        var el = <HTMLElement>stickyHideElements[i];
+
+        if (el.getBoundingClientRect().top < window.scrollY) {
+            el.style.display = "none";
+        } else {
+            el.style.display = "initial";
+        }
+    }
+}
+
 //event handler for window scroll when full hero list is displayed
 function heroListWindowScrollEvent(): void {
     if (shouldScrollLoad(heroPage)) {
@@ -420,17 +439,7 @@ function setFodderScrollEvent(): void {
 
 //scrolls the window to the top of the page
 function scrollToTop(): void {
-    document.body.scrollTop = 0;
-}
-
-//get the identifier for the current hero
-function heroIdentifier(hero: i.ihcHeroBase): string {
-    return identifier(hero.name, hero.stars);
-}
-
-//get the identifier for a hero with name and stars
-function identifier(name: string, stars: number): string {
-    return `${name.replace(" ", "_")}-${stars}`;
+    window.scrollTo(0, 0);
 }
 
 //get an id
