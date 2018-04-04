@@ -40,7 +40,8 @@ Vue.component("calc-item", {
     props: ["hero", "fodder", "change"],
     template:   `<span>
                     <hero-item :hero="hero" :id="hero.id" class="cursor-default"></hero-item>
-                    <div class="stickyHeader"><h2>Select owned<span class="hidden-sm"> heroes</span></h2></div>
+                    <div class="stickyHeader hidden-sm"><h2>Select owned heroes</h2></div>
+                    <div class="stickyHeader hidden-lg hidden-md"><h2>Select owned</h2></div>
                     <span v-if="fodder && fodder.length" class="fodder">
                         <label v-for="f in fodder" :id="f.id" class="citem">
                             <hero-item :showCount="0" :hero="f"></hero-item>
