@@ -1,7 +1,7 @@
 ﻿import * as ihc from './ihc'
 import * as i from './ihc-interfaces'
 
-let filterElement = document.getElementById("filters"),
+let panelElement = document.getElementById("hero-panel"),
     heroesElement = document.getElementById("heroes"),
     calcElement = document.getElementById("calc"),
     appName = "Idle Heroes Calculator",
@@ -9,12 +9,70 @@ let filterElement = document.getElementById("filters"),
     defaultUrl = "fusion",
     ownedStorageKey = "owned",
     storedHeroes = <i.ihcHeroBase[]>JSON.parse(localStorage.getItem(ownedStorageKey) || "[]"),
-    filterVue = {},
+    heroPage = 0,
+    fodderPage = 0, fodderPageSize = 50,
+    allowScrollLoad = false,
+    mdWidth = 768, lgWidth = 1280,
+    panelVue: i.ihcPanel,
     heroesVue: i.ihcHeroListObject,
-    page = 0, allowScrollLoad = false,
-    mdWidth = 768, lgWidth = 1280;
+    panelVueMethods = {
+        filter: function (event: any) {
+            heroPage = 0;
+            scrollToTop();
+            allowScrollLoad = false;
 
-if (filterElement) {
+            let checkbox: HTMLInputElement = event.currentTarget.getElementsByTagName("input")[0];
+            checkbox.checked = !checkbox.checked;
+            renderHeroes(false);
+        },
+        formatNumber: function (num: number, digits: number) {
+            var si = [
+                { value: 1, symbol: "" },
+                { value: 1E3, symbol: "k" },
+                { value: 1E6, symbol: "M" },
+                { value: 1E9, symbol: "G" },
+                { value: 1E12, symbol: "T" },
+                { value: 1E15, symbol: "P" },
+                { value: 1E18, symbol: "E" }
+            ];
+            var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+            var i;
+            for (i = si.length - 1; i > 0; i--) {
+                if (num >= si[i].value) {
+                    break;
+                }
+            }
+            return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+        }
+    },
+    heroesVueMethods = {
+        heroClick: function (hero: i.ihcHeroDetail) {
+            scrollToTop();
+            calculateForHero(hero.name, hero.stars, true);
+        },
+        clearSelected: function (event: any) {
+            heroesVue.selectedHero = null;
+            heroesVue.heroSelected = false;
+            heroesVue.fodder = [];
+            heroesVue.displayFodder = [];
+            panelVue.showFilter = true;
+            setHeroScrollEvent();
+            setLocation(defaultTitle, defaultUrl);
+        },
+        heroChange: function (hero: i.ihcHeroDetail) {
+            if (hero.owned) {
+                removeHero(hero);
+            } else {
+                addHero(hero);
+            }
+            sortFodder();
+            repopulateDisplayFodder();
+            calculateCosts();
+        }
+    };
+
+if (panelElement) {
+    panelVue = getPanelVue(panelElement);
     renderFilters();
 }
 
@@ -31,63 +89,151 @@ if (heroesElement) {
 }
 
 //triggers a calculation for a selected hero
-function calculateForHero(name: string, stars: number, setUrl: boolean = false) {
+function calculateForHero(name: string, stars: number, setUrl: boolean = false): void {
+    setFodderScrollEvent();
     if (setUrl) {
-        setLocation(`${name} ${stars}* Fusion - ${appName}`, `fusion#${name.replace(" ", "_")}-${stars}`);
+        setLocation(`${name} ${stars}* Fusion - ${appName}`, `fusion#${identifier(name, stars)}`);
     }
-    window.removeEventListener("scroll", windowScrollEvent);
+    fodderPage = 0;
+    heroesVue.fodder = [];
+    heroesVue.displayFodder = [];
+    scrollToTop();
 
-    return ihc.api(`{${ihc.heroQuery(name, stars, 7)}}`, true)
+    ihc.api(`{${ihc.heroQuery(name, stars, 7)}}`)
         .then(data => {
             let hero = <i.ihcHeroDetail>data.hero;
             hero.owned = false;
-            
+            hero.fromFirst = true;
             heroesVue.selectedHero = hero;//joinHeroes(hero);
-            heroesVue.selectedHero.id = nextId();
-            heroesVue.heroSelected = true;
-
+            
             addHeroChildren(hero);
+            sortFodder();
+            populateDisplayFodder(fodderPage, fodderPageSize);
             calculateCosts();
+
+            panelVue.showFilter = false;
+            heroesVue.heroSelected = true;
         });
 }
 
-function addHeroChildren(hero: i.ihcHeroDetail) {
-    if (hero && hero.fodder) {
-        hero.fodder.forEach((h, i) => {
-            heroesVue.fodder.push(h);
-        });
+//recursively add hero's children
+function addHeroChildren(hero: i.ihcHeroDetail, depth: number = 0): void {
+    if (!hero) {
+        return;
+    }
+    
+    if (typeof hero.id === "undefined") {
+        hero.id = nextId();
+    }
+
+    if (typeof hero.depth === "undefined") {
+        hero.depth = depth;
+    }
+
+    if (hero.fodder && hero.fodder.length) {
+        heroesVue.fodder = heroesVue.fodder.concat(hero.fodder);
 
         hero.fodder.forEach((h, i) => {
-            h.id = h.id || nextId();
-            h.parentId = hero.id;
-            h.fromFirst = i === 0 && hero.fromFirst;
+            if (typeof h.fromFirst === "undefined") {
+                h.fromFirst = i === 0 && hero.fromFirst;
+            }
 
-            addHeroChildren(h);
+            addHeroChildren(h, depth + 1);
         });
     }
 }
 
-//recursively remove hero's children
-function removeHeroChildren(hero: i.ihcHeroDetail) {
-    if (hero && hero.fodder) {
-        hero.fodder.forEach(f => {
-            removeHeroChildren(f);
+//add a hero and its children to the fodder list
+function addHero(hero: i.ihcHeroDetail) {
+    heroesVue.fodder.push(hero);
+    addHeroChildren(hero);
+}
 
-            var idx = heroesVue.fodder.map(y => y.id).indexOf(f.id);
-            heroesVue.fodder.splice(idx, 1);
+//recursively remove hero's children
+function removeHero(hero: i.ihcHeroDetail, list: i.ihcHeroDetail[] = []): void {
+    if (hero && hero.fodder) {
+        let first = false;
+        if (!list.length) {
+            list = heroesVue.fodder.slice();
+            first = true;
+        }
+
+        hero.fodder.forEach(f => {
+            removeHero(f, list);
+
+            var idx = list.map(y => y.id).indexOf(f.id);
+            list.splice(idx, 1);
         });
+
+        if (first) {
+            heroesVue.fodder = list;
+        }
     }
 }
 
 //Determine the spirit/gold/stones cost for all current fodder
-function calculateCosts() {
+function calculateCosts(): void {
     if (heroesVue.selectedHero) {
-        heroesVue.spirit = heroesVue.selectedHero.maxSpirit + heroesVue.fodder.map(x => x.fromFirst ? x.maxSpirit : x.minSpirit).reduce((accumulator, currentValue) => accumulator + currentValue);
-        heroesVue.gold = heroesVue.selectedHero.maxGold + heroesVue.fodder.map(x => x.fromFirst ? x.maxGold : x.minGold).reduce((accumulator, currentValue) => accumulator + currentValue);
-        heroesVue.stones = heroesVue.selectedHero.maxStones + heroesVue.fodder.map(x => x.fromFirst ? x.maxStones : x.minStones).reduce((accumulator, currentValue) => accumulator + currentValue);
+        var spirit = heroesVue.selectedHero.maxSpirit,
+            gold = heroesVue.selectedHero.maxGold,
+            stones = heroesVue.selectedHero.maxStones,
+            aggregate: any = {},
+            aggregates: i.ihcHeroDetail[] = [];
+
+        heroesVue.fodder.forEach(x => {
+            if (x.owned) return;
+
+            let heroId = heroIdentifier(x);
+
+            if (!aggregate[heroId]) {
+                aggregate[heroId] = JSON.parse(JSON.stringify(x));
+                aggregate[heroId].count = 0;
+            }
+
+            aggregate[heroId].count++;
+
+            if (x.fromFirst) {
+                spirit += x.maxSpirit;
+                gold += x.maxGold;
+                stones += x.maxStones;
+            } else {
+                spirit += x.minSpirit;
+                gold += x.minGold;
+                stones += x.minStones;
+            }
+        });
+
+        for (var agg in aggregate) {
+            console.log("agg", agg);
+            aggregates.push(aggregate[agg]);
+        }
+
+        panelVue.aggregates = aggregates.sort(heroSort);
+        panelVue.spirit = spirit;
+        panelVue.gold =  gold;
+        panelVue.stones = stones;
     } else {
-        heroesVue.spirit = heroesVue.gold = heroesVue.stones = 0;
+        panelVue.spirit = panelVue.gold = panelVue.stones = 0;
+        panelVue.aggregates = [];
+        panelVue.showFilter = true;
+        heroesVue.heroSelected = false;
     }
+}
+
+function sortFodder(): void {
+    heroesVue.fodder = heroesVue.fodder.sort(heroSort);
+}
+
+function heroSort(a: i.ihcHeroDetail, b: i.ihcHeroDetail): number {
+    if (a.depth < b.depth) {
+        return -1;
+    }
+
+    if (a.depth > b.depth) {
+        return 1;
+    }
+
+    return b.stars - a.stars;
 }
 
 //connects heroes to their ancestors and sets their owned status based on local storage
@@ -114,12 +260,12 @@ function storeCheckedHero(name: string, stars: number, remove: boolean = false) 
 
 //gets heroes object from API using the current filter
 function renderHeroes(append: boolean = true): Promise<any> {
-    window.addEventListener("scroll", windowScrollEvent);
+    setHeroScrollEvent();
 
     var filter = getFilter(),
         pageSize = getWindowPageSize();
 
-    return ihc.api(`{${ihc.heroesQuery(page * pageSize, pageSize, filter.f, filter.r, filter.s)}}`)
+    return ihc.api(`{${ihc.heroesQuery(heroPage * pageSize, pageSize, filter.f, filter.r, filter.s)}}`)
         .then(data => {
             if (append) {
                 heroesVue.heroes = heroesVue.heroes.concat(data.heroes);
@@ -135,21 +281,8 @@ function renderHeroes(append: boolean = true): Promise<any> {
 function renderFilters(): void {
     ihc.api(`{${ihc.factionsQuery},${ihc.rolesQuery}}`, true)
         .then(x => {
-            filterVue = new Vue({
-                el: filterElement,
-                data: x,
-                methods: {
-                    filter: function (event: any) {
-                        page = 0;
-                        document.body.scrollTop = document.body.scrollHeight;
-                        allowScrollLoad = false;
-
-                        let checkbox: HTMLInputElement = event.currentTarget.getElementsByTagName("input")[0];
-                        checkbox.checked = !checkbox.checked;
-                        renderHeroes(false);
-                    }
-                }
-            });
+            panelVue.factions = x.factions;
+            panelVue.roles = x.roles;
         });
 }
 
@@ -169,8 +302,8 @@ function getFilter(): i.ihcHeroFilterObject {
 }
 
 //determine if the current scrolling should trigger a page load
-function shouldScrollLoad(): boolean {
-    var scrollLoadHeight = getScrollLoadHeight(page),
+function shouldScrollLoad(currentPage: number): boolean {
+    var scrollLoadHeight = getScrollLoadHeight(currentPage),
         scrollRatio = window.scrollY / document.body.clientHeight;
 
     return allowScrollLoad && scrollRatio > scrollLoadHeight;
@@ -213,101 +346,98 @@ function getHeroesVue(element: HTMLElement): i.ihcHeroListObject {
         selectedHero: null,
         heroSelected: false,
         fodder: [],
-        stones: 0,
-        gold: 0,
-        spirit: 0
+        displayFodder: []
     }
 
     return new Vue({
         el: element,
         data: result,
-        methods: {
-            heroClick: function (event: any) {
-                console.log("heroClick", event.currentTarget.id);
-                var sp = event.currentTarget.id.split("-");
-                calculateForHero(sp[0], parseInt(sp[1]), true);
-            },
-            clearSelected: function (event: any) {
-                heroesVue.selectedHero = null;
-                heroesVue.heroSelected = false;
-                heroesVue.fodder = [];
-                setLocation(defaultTitle, defaultUrl);
-            },
-            heroChange: function (hero: i.ihcHeroDetail) {
-                if (hero.owned) {
-                    removeHeroChildren(hero);
-                } else {
-                    addHeroChildren(hero);
-                }
-                calculateCosts();
-            },
-            formatNumber: function (num: number, digits: number) {
-                var si = [
-                    { value: 1, symbol: "" },
-                    { value: 1E3, symbol: "k" },
-                    { value: 1E6, symbol: "M" },
-                    { value: 1E9, symbol: "G" },
-                    { value: 1E12, symbol: "T" },
-                    { value: 1E15, symbol: "P" },
-                    { value: 1E18, symbol: "E" }
-                ];
-                var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-                var i;
-                for (i = si.length - 1; i > 0; i--) {
-                    if (num >= si[i].value) {
-                        break;
-                    }
-                }
-                return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
-            }
-        }
+        methods: heroesVueMethods
     })
 }
 
-//event handler for window scroll
-function windowScrollEvent() {
-    if (shouldScrollLoad()) {
-        page++;
+//gets the base level panelVue object
+function getPanelVue(element: HTMLElement): i.ihcPanel {
+    let result: i.ihcPanel = {
+        roles: [],
+        factions: [],
+        cacheDate: 0,
+        showFilter: true,
+        spirit: 0,
+        gold: 0,
+        stones: 0,
+        aggregates: []
+
+    }
+
+    return new Vue({
+        el: element,
+        data: result,
+        methods: panelVueMethods
+    });
+}
+
+//populate the object that displays the fodder
+function populateDisplayFodder(start: number, end: number): void {
+    heroesVue.displayFodder = heroesVue.displayFodder.concat(heroesVue.fodder.slice(start, end));
+}
+
+//repopulate display list after fodder list is changed
+function repopulateDisplayFodder(): void {
+    let displayLength = heroesVue.displayFodder.length;
+    heroesVue.displayFodder = heroesVue.fodder.splice(0, Math.min(displayLength, heroesVue.fodder.length));
+}
+
+//event handler for window scroll when full hero list is displayed
+function heroListWindowScrollEvent(): void {
+    if (shouldScrollLoad(heroPage)) {
+        heroPage++;
         renderHeroes();
     }
 }
 
-//get a randomized id
+//event handler for window scroll when fodder is displayed
+function heroFodderWindowScrollEvent(): void {
+    if (shouldScrollLoad(fodderPage)) {
+        fodderPage++;
+
+        let start = fodderPage * fodderPageSize;
+        populateDisplayFodder(start, start + fodderPageSize);
+    }
+}
+
+//set up window scroll events for when hero list is displayed
+function setHeroScrollEvent(): void {
+    window.removeEventListener("scroll", heroFodderWindowScrollEvent);
+    window.addEventListener("scroll", heroListWindowScrollEvent);
+}
+
+//set up window scroll events for when fodder is displayed
+function setFodderScrollEvent(): void {
+    window.removeEventListener("scroll", heroListWindowScrollEvent);
+    window.addEventListener("scroll", heroFodderWindowScrollEvent);
+}
+
+//scrolls the window to the top of the page
+function scrollToTop(): void {
+    document.body.scrollTop = 0;
+}
+
+//get the identifier for the current hero
+function heroIdentifier(hero: i.ihcHeroBase): string {
+    return identifier(hero.name, hero.stars);
+}
+
+//get the identifier for a hero with name and stars
+function identifier(name: string, stars: number): string {
+    return `${name.replace(" ", "_")}-${stars}`;
+}
+
+//get an id
 let nextId = (function () {
-    var nextIndex = [0, 0, 0];
-    var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    var num = chars.length;
+    var i = 0;
 
-    return function (): string {
-        var a = nextIndex[0];
-        var b = nextIndex[1];
-        var c = nextIndex[2];
-        var id = chars[a] + chars[b] + chars[c];
-
-        a = ++a % num;
-
-        if (!a) {
-            b = ++b % num;
-
-            if (!b) {
-                c = ++c % num;
-            }
-        }
-        nextIndex = [a, b, c];
-        return id;
+    return function (): number {
+        return i++;
     }
 }())
-
-//array function to remove element matching a callback result without changing original array
-let removeIf = function<T> (array: Array<T>, callback: (n: T, i: number) => any) : T[] {
-    let i = 0, arr = array.slice();
-    while (i < arr.length) {
-        if (callback(array[i], i)) {
-            arr.splice(i, 1);
-        } else {
-            ++i;
-        }
-    }
-
-    return arr;
-};

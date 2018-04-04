@@ -12,7 +12,7 @@ const heroesRequest = "heroes(take:{take},skip:{skip},factions:[{factions}],role
 let heroesVue: i.ihcHeroListObject;
 
 function api_base(query: string, variables: i.ihcApiVariables): Promise<any> {
-    console.log("api:", query);
+    //console.log("api:", query);
     return fetch("/api", {
             body: JSON.stringify({
                 query: query,
@@ -36,7 +36,7 @@ export function api(query: string, cache: boolean = false): Promise<any> {
         .then(response => {
             let d: i.ihcApiCacheable;
             if (response && (d = response.data)) {
-                console.log("api:", d);
+                //console.log("api:", d);
                 d.cacheDate = utc();
                 localStorage.setItem(query, JSON.stringify(d));
                 return d;

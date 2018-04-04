@@ -24,9 +24,10 @@ Vue.component("filter-items", {
                 </ul>`});
 
 Vue.component("hero-item", {
-    props: ["hero"],
+    props: ["hero", "showCount"],
     template:   `<span :class="'hero s' + hero.stars"  :id="hero.name + '-' + hero.stars">
                     <img :src="hero.img" class="himg" />
+                    <span v-if="hero.count > 0" class="hcount">{{hero.count}}</span>
                     <span v-if="hero.stars && hero.stars > 5 && hero.stars < 10" class="stars">
                         <img v-for="s in hero.stars - 5" src= "/img/redstar.png" class="star h9" />
                     </span>
@@ -41,7 +42,7 @@ Vue.component("calc-item", {
                     <hero-item :hero="hero" :id="hero.id"></hero-item>
                     <span v-if="fodder && fodder.length" class="fodder">
                         <label v-for="f in fodder" :id="f.id" class="citem">
-                            <hero-item :hero="f"></hero-item>
+                            <hero-item :showCount="0" :hero="f"></hero-item>
                             <input type="checkbox" v-model="f.owned" v-on:change="change(f)" />
                             <span class="checkmark shade"><i class="icon-ok"></i></span>
                         </label>

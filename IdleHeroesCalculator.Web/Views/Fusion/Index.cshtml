@@ -7,28 +7,40 @@
 </label>
 }
 <input type="checkbox" class="nav-toggle" id="filter-toggle">
-<nav id="filter-drawer" class="drawer sticky right">
+<nav id="hero-panel" class="drawer sticky right">
     <label class="close" for="filter-toggle">
     </label>
-    <h4><i class="icon-filter"></i>FUSION FILTERS</h4>
-    <div id="filters" class="flist">
-        <filter-items :factions="factions" :roles="roles" :filter="filter" :min-stars="5" :max-stars="10"></filter-items>
-    </div>
+    <transition-group name="fdrawer" tag="p">
+        <div v-if="showFilter" :key="1">
+            <h4><i class="icon-filter"></i>FUSION FILTERS</h4>
+            <div id="filters" class="flist">
+                <filter-items :factions="factions" :roles="roles" :filter="filter" :min-stars="5" :max-stars="10"></filter-items>
+            </div>
+        </div>
+        <div class="calcagg" :key="2" v-else>
+            <h4><i class="icon-filter"></i>FUSION COSTS</h4>
+            <span class="calcamt spirit"><span class="hcount">{{formatNumber(spirit, 2)}}</span></span>
+            <span class="calcamt gold"><span class="hcount">{{formatNumber(gold, 2)}}</span></span>
+            <span class="calcamt stones"><span class="hcount">{{formatNumber(stones, 1)}}</span></span>
+            <transition-group name="clist" tag="span" class="hcalc">
+                <hero-item v-for="hero in aggregates" v-if="hero.count" :showCount="1" :hero="hero" :key="hero.name + '-' + hero.stars"></hero-item>
+            </transition-group>
+        </div>
+    </transition-group>
 </nav>
+
+
 <div id="heroes" class="hbox">
     <div class="hlist" v-if="!heroSelected" v-cloak>
+        <h2>Select a hero to calculate</h2>
         <transition-group name="hlist" tag="p">
-            <hero-item v-for="hero in heroes" @@click.native="heroClick" :hero="hero" :key="hero.name + '-' + hero.stars"></hero-item>
+            <hero-item v-for="hero in heroes" @@click.native="heroClick(hero)" :showCount="0" :hero="hero" :key="hero.name + '-' + hero.stars"></hero-item>
         </transition-group>
     </div>
     <div class="cnest" v-if="heroSelected" v-cloak>
         <div class="calchead">
             <button @@click="clearSelected"><i class="icon-left-big"></i></button>
-            <span class="calcamt spirit">{{formatNumber(spirit, 2)}}</span>
-            <span class="calcamt gold">{{formatNumber(gold, 2)}}</span>
-            <span class="calcamt stones">{{formatNumber(stones, 1)}}</span><br />
         </div>
-        <calc-item :hero="selectedHero" :fodder="fodder" :change="heroChange"></calc-item>
-        @*<calc-item :hero="selectedHero" :first="true"></calc-item>*@
+        <calc-item :hero="selectedHero" :fodder="displayFodder" :change="heroChange"></calc-item>
     </div>
 </div>

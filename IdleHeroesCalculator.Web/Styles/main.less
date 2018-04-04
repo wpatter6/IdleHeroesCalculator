@@ -10,8 +10,8 @@ input[type=checkbox]:checked + .checkmark {
     visibility: visible;
 }
 
-#filter-drawer {
-    width: 225px;
+#hero-panel {
+    width: 250px;
     display: inline-block;
     vertical-align:top;
 }
@@ -39,6 +39,11 @@ header {
         margin-right: auto;
         text-align: center;
         padding: 10px;
+    }
+
+    .himg {
+        min-width: 95px;
+        max-width: 200px;
     }
 }
 
@@ -86,13 +91,17 @@ header {
         justify-content: center;
         flex-wrap: wrap;
 
-        &>*{
+        & > * {
             max-width: 30%;
         }
-
         /*.hero .himg {
             max-width: 30%;
         }*/
+    }
+
+    .himg {
+        min-width: 95px;
+        max-width: 200px;
     }
 }
 
@@ -226,39 +235,36 @@ header {
 
     .himg {
         width: 100%;
-        min-width: 95px;
-        max-width: 200px;
     }
+
+}
+
+.hcount {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: @bg-navy-light;
+    min-width: 25px;
+    text-align: center;
+}
+
+.heroes {
+    position: relative;
 }
 
 /* Calculation amount display */
 .calchead {
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     position: sticky;
     top: 40px;
+    z-index: 20;
 
     & > * {
+        z-index: 1102;
         font-weight: bolder;
         display: inline-block;
         height: 55px;
         min-width: 55px;
         margin-top: 8px;
-    }
-
-    .calcamt {
-        line-height: 5.4;
-
-        &.spirit {
-            background: url(https://vignette.wikia.nocookie.net/idleheroes/images/1/18/Spirit-icon.png/revision/latest) center no-repeat/55px;
-        }
-
-        &.gold {
-            background: url(https://vignette.wikia.nocookie.net/idleheroes/images/0/0d/Gold-icon.png/revision/latest) center no-repeat/55px;
-        }
-
-        &.stones {
-            background: url(https://vignette.wikia.nocookie.net/idleheroes/images/2/26/Hero_Promotion_Stone-icon.png/revision/latest) center no-repeat/55px;
-        }
     }
 }
 
@@ -302,6 +308,45 @@ header {
     }
 }
 
+.calcagg {
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    margin: 0 auto;
+
+    .calcamt {
+        width: 55px;
+        height: 55px;
+        padding: 2px;
+        display: inline-block;
+        position: relative;
+    }
+
+    .hero {
+        width: 59px;
+        height: 59px;
+        display: inline-block;
+        padding: 1px;
+
+        .himg {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+.calcamt {
+    &.spirit {
+        background: url(https://vignette.wikia.nocookie.net/idleheroes/images/1/18/Spirit-icon.png/revision/latest) center no-repeat/55px;
+    }
+
+    &.gold {
+        background: url(https://vignette.wikia.nocookie.net/idleheroes/images/0/0d/Gold-icon.png/revision/latest) center no-repeat/55px;
+    }
+
+    &.stones {
+        background: url(https://vignette.wikia.nocookie.net/idleheroes/images/2/26/Hero_Promotion_Stone-icon.png/revision/latest) center no-repeat/55px;
+    }
+}
+
 .bgfade {
     position: absolute;
     height: 300px;
@@ -313,16 +358,20 @@ header {
     display: none;
 }
 
-.hlist-enter-active, .hlist-leave-active {
+.hlist-enter-active, .hlist-leave-active,
+.clist-enter-active, .clist-leave-active,
+.fdrawer-enter-active, .fdrawer-leave-active {
     transition: all @transition-time;
 }
 
-.hlist-enter, .hlist-leave-to {
+.hlist-enter, .hlist-leave-to,
+.clist-enter, .clist-leave-to,
+.fdrawer-enter, .fdrawer-leave-to {
     opacity: 0;
     transform: translateY(30px);
 }
 
-.hlist-move {
+.hlist-move, .clist-move, .fdrawer-move {
     transition: transform @transition-time;
 }
 
@@ -373,6 +422,10 @@ header {
 
 /* Device (sm) */
 @media screen and (max-width: 767px) {
+    .flist .fitem {
+        padding-top: 0;
+    }
+
     .hbox {
         .hlist {
             padding: 10px;

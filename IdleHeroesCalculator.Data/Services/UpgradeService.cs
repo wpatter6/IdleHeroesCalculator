@@ -69,6 +69,7 @@ namespace IdleHeroesCalculator.Data.Services
             }
 
             var currentFaction = upgradeHero.Faction == Factions.Any ? Factions.Specific : upgradeHero.Faction;
+            var currentName = currentFaction == Factions.Specific ? _defaultHeroName : currentFaction.ToString();
             var fodderHeroName = upgradeHero.Stars - 1 == upgradeHero.MinStars ? upgradeHero.Fodder1 : upgradeHero.Fodder2 ?? upgradeHero.Fodder1;
 
             foreach (var item in upgradeData)
@@ -114,7 +115,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero(fodderHero)
                     {
-                        Name = fodderHero?.Name ?? currentFaction.ToString(),
+                        Name = fodderHero?.Name ?? currentName,
                         Faction = currentFaction,
                         Stars = item.SpecificFodderHeroStars
                     });
@@ -125,7 +126,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero()
                     {
-                        Name = currentFaction.ToString(),
+                        Name = currentName,
                         Faction = currentFaction,
                         Stars = item.TypedFodderHeroStars
                     });
@@ -135,7 +136,7 @@ namespace IdleHeroesCalculator.Data.Services
                 {
                     fodderList.Add(new Hero()
                     {
-                        Name = currentFaction.ToString(),
+                        Name = currentName,
                         Faction = currentFaction,
                         Stars = item.TypedFodderHeroStars2
                     });

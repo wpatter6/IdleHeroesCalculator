@@ -12,9 +12,16 @@ export interface ihcApiFaction {
     img: string
 }
 export interface ihcApiCacheable {
-    roles: ihcApiRole,
-    factions: ihcApiFaction,
+    roles: ihcApiRole[],
+    factions: ihcApiFaction[],
     cacheDate: number
+}
+export interface ihcPanel extends ihcApiCacheable {
+    showFilter: boolean,
+    spirit: number,
+    gold: number,
+    stones: number,
+    aggregates: ihcHeroDetail[]
 }
 export interface ihcHeroBase {
     name: string,
@@ -28,13 +35,14 @@ export interface ihcHeroListObject {
     selectedHero: ihcHeroDetail | null,
     heroSelected: boolean,
     fodder: ihcHeroDetail[],
-    spirit: number,
+    displayFodder: ihcHeroDetail[]
+    /*spirit: number,
     gold: number,
-    stones: number
+    stones: number,
+    aggregate: any*/
 }
 export interface ihcHeroDetail extends ihcHeroImg {
-    id: string, 
-    parentId: string,
+    id: number | undefined, 
     minSpirit: number,
     maxSpirit: number,
     minGold: number,
@@ -44,7 +52,10 @@ export interface ihcHeroDetail extends ihcHeroImg {
     fodder: ihcHeroDetail[],
     owned: boolean,
     needed: boolean,
-    fromFirst: boolean
+    fromFirst: boolean | undefined,
+    count: number,
+    showCount: boolean,
+    depth: number
 }
 export interface ihcHeroFilterObject {
     f: number[],
