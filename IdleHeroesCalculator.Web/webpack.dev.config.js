@@ -26,7 +26,10 @@
             "filename": "[name].js",
         },
         "resolve": {
-            "extensions": ['.ts', '.tsx', '.js', '.less']
+            "extensions": ['.ts', '.tsx', '.js', '.less'],
+            "alias": {
+                "styles": path.resolve(__dirname, 'Styles')
+            }
         },
         "devtool": "source-map",
         "module": {
@@ -46,6 +49,11 @@
                     "test": /\.tsx?$/,
                     "loader": 'awesome-typescript-loader',
                     "exclude": /node_modules/,
+                },
+                {
+                    "test": /\.vue$/,
+                    "loader": "vue-loader",
+                    "options": { "esModule": true }
                 }
             ]
         },

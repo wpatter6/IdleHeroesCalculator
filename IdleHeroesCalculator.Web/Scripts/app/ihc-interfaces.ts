@@ -11,18 +11,12 @@ export interface ihcApiFaction {
     name: string,
     img: string
 }
-export interface ihcApiCacheable {
-    roles: ihcApiRole[],
-    factions: ihcApiFaction[],
-    cacheDate: number
+export interface ihcHeroFilterObject {
+    f: number[],
+    r: number[],
+    s: number[]
 }
-export interface ihcPanel extends ihcApiCacheable {
-    showFilter: boolean,
-    spirit: number,
-    gold: number,
-    stones: number,
-    aggregates: ihcHeroDetail[]
-}
+
 export interface ihcHeroBase {
     name: string,
     stars: number
@@ -30,20 +24,8 @@ export interface ihcHeroBase {
 export interface ihcHeroImg extends ihcHeroBase {
     img: string
 }
-export interface ihcHeroListObject {
-    heroes: ihcHeroImg[],
-    selectedHero: ihcHeroDetail | null,
-    showList: boolean,
-    showCalc: boolean,
-    fodder: ihcHeroDetail[],
-    displayFodder: ihcHeroDetail[]
-    /*spirit: number,
-    gold: number,
-    stones: number,
-    aggregate: any*/
-}
 export interface ihcHeroDetail extends ihcHeroImg {
-    id: number | undefined, 
+    id: number | undefined,
     minSpirit: number,
     maxSpirit: number,
     minGold: number,
@@ -58,8 +40,30 @@ export interface ihcHeroDetail extends ihcHeroImg {
     showCount: boolean,
     depth: number
 }
-export interface ihcHeroFilterObject {
-    f: number[],
-    r: number[],
-    s: number[]
+
+export interface ihcApiCacheable {
+    roles: ihcApiRole[],
+    factions: ihcApiFaction[],
+    cacheDate: number
+}
+export interface ihcPanel extends ihcApiCacheable {
+    showFilter: boolean,
+    displayFodder: ihcHeroDetail[]/*,
+    fodder: ihcHeroDetail[],
+    spirit: number,
+    gold: number,
+    stones: number,
+    aggregates: ihcHeroDetail[]*/
+}
+export interface ihcHeroListObject {
+    heroes: ihcHeroImg[],
+    selectedHero: ihcHeroDetail | null,
+    showList: boolean,
+    showCalc: boolean,
+    fodder: ihcHeroDetail[],
+    //displayFodder: ihcHeroDetail[],
+    spirit: number,
+    gold: number,
+    stones: number,
+    aggregates: ihcHeroDetail[]
 }

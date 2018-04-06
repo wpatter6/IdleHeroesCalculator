@@ -58,33 +58,6 @@ header {
         left: 0;
     }
 
-    .citem {
-        position: relative;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .checkmark {
-            .border-radius(19%);
-            position: absolute;
-            display: inline-block;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            text-align: center;
-            padding-top: 23%;
-            z-index: 10;
-            cursor: pointer;
-            margin: 10px 10px 16px 10px;
-
-            i {
-                font-size: 2rem;
-            }
-        }
-    }
-
     .fodder {
         display: flex;
         align-items: center;
@@ -94,9 +67,6 @@ header {
         & > * {
             max-width: 30%;
         }
-        /*.hero .himg {
-            max-width: 30%;
-        }*/
     }
 
     .himg {
@@ -108,133 +78,6 @@ header {
 /* Shaded element */
 .shade {
     background: rgba(0, 0, 0, .5);
-}
-
-/* Individual Hero Image */
-.hero {
-    position: relative;
-    display: inline-block;
-    transition: all @transition-time;
-    padding: 10px;
-    cursor: pointer;
-
-    .star {
-        position: absolute;
-        z-index: 2;
-        bottom: 12%;
-
-        &.h9 {
-            height: 22%;
-        }
-
-        &.h5 {
-            height: 18%;
-        }
-    }
-
-    &.s9 > .stars > img {
-        &:nth-last-of-type(1) {
-            left: 23%;
-        }
-
-        &:nth-last-of-type(2) {
-            left: 33%;
-        }
-
-        &:nth-last-of-type(3) {
-            left: 43%;
-        }
-
-        &:nth-last-of-type(4) {
-            left: 53%;
-        }
-    }
-
-    &.s8 > .stars > img {
-        &:nth-last-of-type(1) {
-            left: 30%;
-        }
-
-        &:nth-last-of-type(2) {
-            left: 41%;
-        }
-
-        &:nth-last-of-type(3) {
-            left: 52%;
-        }
-    }
-
-    &.s7 > .stars > img {
-        &:nth-last-of-type(1) {
-            left: 33%;
-        }
-
-        &:nth-last-of-type(2) {
-            left: 47%;
-        }
-    }
-
-    &.s6 > .stars > img {
-        left: 40%;
-    }
-
-    &.s5 > .stars > img {
-        &:nth-last-of-type(1) {
-            left: 18%;
-        }
-
-        &:nth-last-of-type(2) {
-            left: 29.5%;
-        }
-
-        &:nth-last-of-type(3) {
-            left: 41%;
-        }
-
-        &:nth-last-of-type(4) {
-            left: 52.5%;
-        }
-
-        &:nth-last-of-type(5) {
-            left: 64%;
-        }
-    }
-
-    &.s4 > .stars > img {
-        &:nth-last-of-type(1) {
-            left: 23%;
-        }
-
-        &:nth-last-of-type(2) {
-            left: 35%;
-        }
-
-        &:nth-last-of-type(3) {
-            left: 47%;
-        }
-
-        &:nth-last-of-type(4) {
-            left: 59%;
-        }
-    }
-
-    &.s3 > .stars > img {
-        &:nth-last-of-type(1) {
-            left: 30%;
-        }
-
-        &:nth-last-of-type(2) {
-            left: 41%;
-        }
-
-        &:nth-last-of-type(3) {
-            left: 52%;
-        }
-    }
-
-    .himg {
-        width: 100%;
-    }
 }
 
 .hcount {
@@ -317,22 +160,6 @@ header {
         display: inline-block;
         position: relative;
     }
-
-    .hero {
-        width: 59px;
-        height: 59px;
-        display: inline-block;
-        padding: 1px;
-
-        .star {
-            bottom: 7%;
-        }
-
-        .himg {
-            width: 100%;
-            height: 100%;
-        }
-    }
 }
 
 .calcamt {
@@ -358,7 +185,7 @@ header {
 
 .stickyHeader {
     position: sticky;
-    top: 6px;
+    top: 8px;
     z-index: 1102;
     text-transform: uppercase;
     margin: 0 auto;
@@ -367,6 +194,10 @@ header {
 
 .cursor-default {
     cursor: default !important;
+}
+
+.overflow-hidden {
+    overflow: hidden;
 }
 
 [v-cloak] {

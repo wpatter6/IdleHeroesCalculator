@@ -1,6 +1,9 @@
 ﻿import * as ihc from './ihc'
 import * as i from './ihc-interfaces'
 
+
+declare var Vue: any;
+
 let panelElement = document.getElementById("hero-panel"),
     heroesElement = document.getElementById("heroes"),
     calcElement = document.getElementById("calc"),
@@ -8,6 +11,7 @@ let panelElement = document.getElementById("hero-panel"),
     defaultTitle = `Fusion - ${appName}`,
     defaultUrl = "fusion",
     ownedStorageKey = "owned",
+    stickyHideElements = document.getElementsByClassName("stickyHide"),
     storedHeroes = <i.ihcHeroBase[]>JSON.parse(localStorage.getItem(ownedStorageKey) || "[]"),
     heroPage = 0,
     fodderPage = 0, fodderPageSize = 50,
@@ -25,7 +29,17 @@ let panelElement = document.getElementById("hero-panel"),
             checkbox.checked = !checkbox.checked;
             renderHeroes(false);
         },
-        formatNumber: function (num: number, digits: number) {
+        heroChange: function (hero: i.ihcHeroDetail) {
+            if (hero.owned) {
+                removeHero(hero);
+            } else {
+                addHero(hero);
+            }
+            sortFodder();
+            repopulateDisplayFodder();
+            calculateCosts();
+        },
+        formatNumber: function (num: number, digits: number): string {
             var si = [
                 { value: 1, symbol: "" },
                 { value: 1E3, symbol: "k" },
@@ -48,27 +62,36 @@ let panelElement = document.getElementById("hero-panel"),
     heroesVueMethods = {
         heroClick: function (hero: i.ihcHeroDetail) {
             scrollToTop();
-            calculateForHero(hero.name, hero.stars, true);
+            loadSelectedHero(hero.name, hero.stars, true);
         },
         clearSelected: function (event: any) {
             heroesVue.selectedHero = null;
             heroesVue.showList = true;
             heroesVue.showCalc = false;
             heroesVue.fodder = [];
-            heroesVue.displayFodder = [];
+            panelVue.displayFodder = [];
             panelVue.showFilter = true;
             setHeroScrollEvent();
             setLocation(defaultTitle, defaultUrl);
         },
-        heroChange: function (hero: i.ihcHeroDetail) {
-            if (hero.owned) {
-                removeHero(hero);
-            } else {
-                addHero(hero);
+        formatNumber: function (num: number, digits: number): string {
+            var si = [
+                { value: 1, symbol: "" },
+                { value: 1E3, symbol: "k" },
+                { value: 1E6, symbol: "M" },
+                { value: 1E9, symbol: "G" },
+                { value: 1E12, symbol: "T" },
+                { value: 1E15, symbol: "P" },
+                { value: 1E18, symbol: "E" }
+            ];
+            var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+            var i;
+            for (i = si.length - 1; i > 0; i--) {
+                if (num >= si[i].value) {
+                    break;
+                }
             }
-            sortFodder();
-            repopulateDisplayFodder();
-            calculateCosts();
+            return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
         }
     };
 
@@ -86,20 +109,20 @@ if (heroesElement) {
     renderHeroes().then(x => {
         if (selectedHero) {
             let selectedSplit = selectedHero.split("-");
-            calculateForHero(selectedSplit[0].replace("_", " "), parseInt(selectedSplit[1]), true);
+            loadSelectedHero(selectedSplit[0].replace("_", " "), parseInt(selectedSplit[1]), true);
         }
     })
 }
 
 //triggers a calculation for a selected hero
-function calculateForHero(name: string, stars: number, setUrl: boolean = false): void {
+function loadSelectedHero(name: string, stars: number, setUrl: boolean = false): void {
     setFodderScrollEvent();
     if (setUrl) {
         setLocation(`${name} ${stars}* Fusion - ${appName}`, `fusion#${ihc.identifier(name, stars)}`);
     }
     fodderPage = 0;
     heroesVue.fodder = [];
-    heroesVue.displayFodder = [];
+    //panelVue.displayFodder = [];
     scrollToTop();
     heroesVue.showList = false;
 
@@ -163,10 +186,12 @@ function removeHero(hero: i.ihcHeroDetail, list: i.ihcHeroDetail[] = []): void {
         }
 
         hero.fodder.forEach(f => {
-            removeHero(f, list);
+            let idx = list.indexOf(f);
+            if (idx > -1) {
+                list.splice(idx, 1);
+            }
 
-            var idx = list.map(y => y.id).indexOf(f.id);
-            list.splice(idx, 1);
+            removeHero(f, list);
         });
 
         if (first) {
@@ -211,23 +236,25 @@ function calculateCosts(): void {
             aggregates.push(aggregate[agg]);
         }
 
-        panelVue.aggregates = aggregates.sort(heroSort);
-        panelVue.spirit = spirit;
-        panelVue.gold =  gold;
-        panelVue.stones = stones;
+        heroesVue.aggregates = aggregates.sort(heroSort);
+        heroesVue.spirit = spirit;
+        heroesVue.gold =  gold;
+        heroesVue.stones = stones;
     } else {
-        panelVue.spirit = panelVue.gold = panelVue.stones = 0;
-        panelVue.aggregates = [];
+        heroesVue.spirit = heroesVue.gold = heroesVue.stones = 0;
+        heroesVue.aggregates = [];
         panelVue.showFilter = true;
         heroesVue.showList = true;
         heroesVue.showCalc = false;
     }
 }
 
+//Sort fodder list
 function sortFodder(): void {
     heroesVue.fodder = heroesVue.fodder.sort(heroSort);
 }
 
+//Method to pass into the .sort for fodder array
 function heroSort(a: i.ihcHeroDetail, b: i.ihcHeroDetail): number {
     if (a.depth < b.depth) {
         return -1;
@@ -351,7 +378,11 @@ function getHeroesVue(element: HTMLElement): i.ihcHeroListObject {
         showList: true,
         showCalc: false,
         fodder: [],
-        displayFodder: []
+        spirit: 0,
+        gold: 0,
+        stones: 0,
+        aggregates: [],
+        //displayFodder: []
     }
 
     return new Vue({
@@ -368,11 +399,11 @@ function getPanelVue(element: HTMLElement): i.ihcPanel {
         factions: [],
         cacheDate: 0,
         showFilter: true,
-        spirit: 0,
-        gold: 0,
-        stones: 0,
-        aggregates: []
-
+        displayFodder: [],
+        //spirit: 0,
+        //gold: 0,
+        //stones: 0,
+        //aggregates: []
     }
 
     return new Vue({
@@ -384,16 +415,15 @@ function getPanelVue(element: HTMLElement): i.ihcPanel {
 
 //populate the object that displays the fodder
 function populateDisplayFodder(start: number, end: number): void {
-    heroesVue.displayFodder = heroesVue.displayFodder.concat(heroesVue.fodder.slice(start, end));
+    panelVue.displayFodder = panelVue.displayFodder.concat(heroesVue.fodder.slice(start, end));
 }
 
 //repopulate display list after fodder list is changed
 function repopulateDisplayFodder(): void {
-    let displayLength = heroesVue.displayFodder.length;
-    heroesVue.displayFodder = heroesVue.fodder.splice(0, Math.min(displayLength, heroesVue.fodder.length));
+    let displayLength = panelVue.displayFodder.length;
+    panelVue.displayFodder = heroesVue.fodder.splice(0, Math.min(displayLength, heroesVue.fodder.length));
 }
 
-var stickyHideElements = document.getElementsByClassName("stickyHide");
 function globalScrollEvent(): void {
 
     for (var i = 0; i < stickyHideElements.length; i++) {

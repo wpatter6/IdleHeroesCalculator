@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove="Scripts\app\app.ts" />
+    <None Remove="Scripts\app\ihc-extensions.ts" />
     <None Remove="Scripts\app\ihc-interfaces.ts" />
     <None Remove="Scripts\app\ihc.ts" />
     <None Remove="Scripts\app\vue-components.ts" />
@@ -49,6 +50,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\app\app.ts" />
+    <TypeScriptCompile Include="Scripts\app\ihc-extensions.ts" />
     <TypeScriptCompile Include="Scripts\app\ihc.ts" />
     <TypeScriptCompile Include="Scripts\app\ihc-interfaces.ts" />
     <TypeScriptCompile Include="Scripts\app\vue-components.ts" />

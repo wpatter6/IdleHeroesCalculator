@@ -94,7 +94,6 @@ export function identifier(name: string, stars: number): string {
     return `${name.replace(" ", "_")}-${stars}`;
 }
 
-
 function utc(date: Date = new Date()): number {
     return (date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 }
